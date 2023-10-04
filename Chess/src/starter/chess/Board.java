@@ -17,6 +17,11 @@ public class Board implements ChessBoard{
         int column = position.getColumn();
         return theBoard[row][column];
     }
+    public void deletePiece(ChessPosition position){
+        int row = position.getRow();
+        int column = position.getColumn();
+        theBoard[row][column] = null;
+    }
 
     @Override
     public void resetBoard() {

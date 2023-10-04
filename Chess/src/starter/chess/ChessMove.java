@@ -26,5 +26,5 @@ public interface ChessMove {
     ChessPiece.PieceType getPromotionPiece();
     void setEndPosition(ChessPosition endPosition);
     void setStartPosition(ChessPosition start);
-    void setPiece(ChessPiece.PieceType piece);
+    void setPromotion(ChessPiece.PieceType piece);
 }

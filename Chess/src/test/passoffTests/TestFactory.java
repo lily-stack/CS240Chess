@@ -36,7 +36,7 @@ public class TestFactory {
         ChessMove move = new Move();
         move.setStartPosition(startPosition);
         move.setEndPosition(endPosition);
-        move.setPiece(promotionPiece);
+        move.setPromotion(promotionPiece);
 		return move;
     }
     //------------------------------------------------------------------------------------------------------------------

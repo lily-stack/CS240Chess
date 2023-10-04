@@ -24,7 +24,7 @@ public class Move implements ChessMove{
     public void setEndPosition(ChessPosition endPosition) {
         this.endPosition = endPosition;
     }
-    public void setPiece(ChessPiece.PieceType piece) {
+    public void setPromotion(ChessPiece.PieceType piece) {
         this.piece = piece;
     }
 }
