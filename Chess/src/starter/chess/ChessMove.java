@@ -24,4 +24,7 @@ public interface ChessMove {
      * @return Type of piece to promote a pawn to, or null if no promotion
      */
     ChessPiece.PieceType getPromotionPiece();
+    void setEndPosition(ChessPosition endPosition);
+    void setStartPosition(ChessPosition start);
+    void setPiece(ChessPiece.PieceType piece);
 }

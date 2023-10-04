@@ -23,41 +23,48 @@ public class Board implements ChessBoard{
         for(int i = 0; i < BOARD_WIDTH; i++) {
             for(int j = 0; j < BOARD_LENGTH; j++){
                 Position thePosition = new Position();
+                thePosition.row = i;
+                thePosition.column = j;
+                ChessPiece piece = new Piece();
                 if(i < 2){
                     // thePiece.setColor
-                    theBoard[i][j].SetColor(ChessGame.TeamColor.WHITE);
+                    piece.SetColor(ChessGame.TeamColor.WHITE);
                 }
                 if(i > 5){
                     // thePiece.setColor
-                    theBoard[i][j].SetColor(ChessGame.TeamColor.BLACK);
+                    piece.SetColor(ChessGame.TeamColor.BLACK);
                 }
                 if(i == 1 || i == 6) {
-                    thePosition.row = i;
-                    thePosition.column = j;
                     //pawn enum
-                    theBoard[i][j].SetType(ChessPiece.PieceType.PAWN);
-                    addPiece(thePosition,theBoard[i][j]);
+                    piece.SetType(ChessPiece.PieceType.PAWN);
+                    //theBoard[i][j] = piece;
+                    addPiece(thePosition,piece);
                 }
                 if(i == 0 || i == 7){
                     if(j == 0 || j == 7){
                         //castle
-                        theBoard[i][j].SetType(ChessPiece.PieceType.ROOK);
+                        piece.SetType(ChessPiece.PieceType.ROOK);
+                        addPiece(thePosition,piece);
                     }
                     if(j == 1 || j == 6){
                         //knight
-                        theBoard[i][j].SetType(ChessPiece.PieceType.KNIGHT);
+                        piece.SetType(ChessPiece.PieceType.KNIGHT);
+                        addPiece(thePosition,piece);
                     }
                     if(j == 2 || j == 5){
                         //bishop
-                        theBoard[i][j].SetType(ChessPiece.PieceType.BISHOP);
+                        piece.SetType(ChessPiece.PieceType.BISHOP);
+                        addPiece(thePosition,piece);
                     }
-                    if(j == 3) {
+                    if(j == 4) {
                         //king
-                        theBoard[i][j].SetType(ChessPiece.PieceType.KING);
+                        piece.SetType(ChessPiece.PieceType.KING);
+                        addPiece(thePosition,piece);
                     }
-                    if(j == 4){
+                    if(j == 3){
                         //queen
-                        theBoard[i][j].SetType(ChessPiece.PieceType.QUEEN);
+                        piece.SetType(ChessPiece.PieceType.QUEEN);
+                        addPiece(thePosition,piece);
                     }
                 }
             }

@@ -1,42 +1,30 @@
 package chess;
 
 public class Move implements ChessMove{
-    ChessPosition position;
-    ChessPiece piece;
-    Move(ChessPosition pos, ChessPiece piece){
-        this.position = pos;
-        this.piece = piece;
-    }
+    public ChessPosition startPosition;
+    public ChessPosition endPosition;
+    public ChessPiece.PieceType piece;
+
     @Override
     public ChessPosition getStartPosition() {
-        return this.position;
+        return this.startPosition;
     }
 
     @Override
     public ChessPosition getEndPosition() {
-        if(piece.getPieceType() == ChessPiece.PieceType.PAWN){
-
-        }
-        if(piece.getPieceType() == ChessPiece.PieceType.PAWN){
-
-        }
-        if(piece.getPieceType() == ChessPiece.PieceType.PAWN){
-
-        }
-        if(piece.getPieceType() == ChessPiece.PieceType.PAWN){
-
-        }
-        if(piece.getPieceType() == ChessPiece.PieceType.PAWN){
-
-        }
-        if(piece.getPieceType() == ChessPiece.PieceType.PAWN){
-
-        }
-        return null;
+        return this.endPosition;
     }
-
     @Override
     public ChessPiece.PieceType getPromotionPiece() {
-        return null;
+        return piece;
+    }
+    public void setStartPosition(ChessPosition start){
+        this.startPosition = start;
+    }
+    public void setEndPosition(ChessPosition endPosition) {
+        this.endPosition = endPosition;
+    }
+    public void setPiece(ChessPiece.PieceType piece) {
+        this.piece = piece;
     }
 }

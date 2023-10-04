@@ -11,4 +11,10 @@ public class Position implements ChessPosition{
     public int getColumn() {
         return column;
     }
+    public void setRow(int rowNum){
+        row = rowNum;
+    }
+    public void setColumn(int colNum){
+        column = colNum;
+    }
 }
