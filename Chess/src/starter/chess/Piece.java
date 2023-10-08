@@ -23,6 +23,20 @@ public class Piece implements ChessPiece{
     public void SetColor(ChessGame.TeamColor c) {
         color = c;
     }
+    public void promotionMoves(ChessPosition myPosition, ChessPosition possiblePos, Collection<ChessMove> possibleMoves){
+        ChessMove aMove = new Move();
+        aMove.setMove(myPosition, possiblePos, ChessPiece.PieceType.BISHOP);
+        possibleMoves.add(aMove);
+        ChessMove aMove2 = new Move();
+        aMove2.setMove(myPosition, possiblePos, ChessPiece.PieceType.QUEEN);
+        possibleMoves.add(aMove2);
+        ChessMove aMove3 = new Move();
+        aMove3.setMove(myPosition, possiblePos, ChessPiece.PieceType.KNIGHT);
+        possibleMoves.add(aMove3);
+        ChessMove aMove4 = new Move();
+        aMove4.setMove(myPosition, possiblePos, ChessPiece.PieceType.ROOK);
+        possibleMoves.add(aMove4);
+    }
 
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
@@ -34,6 +48,7 @@ public class Piece implements ChessPiece{
         //ChessMove aMove = new Move();
         if(piece.getPieceType() == ChessPiece.PieceType.PAWN){
             possibleMoves.clear();
+            //first double move
             if(piece.getTeamColor() == ChessGame.TeamColor.BLACK){
                 if(myPosition.getRow() == 6){
                     for(int i = 1; i < 3; i++) {
@@ -50,18 +65,20 @@ public class Piece implements ChessPiece{
                         }
                     }
                 }
-                if(row-1 > 0){
+                if(row-1 >= 0 || row == 1){
                     ChessPosition possiblePos = new Position();
                     possiblePos.setRow(row-1);
                     possiblePos.setColumn(col);
                     if(board.getPiece(possiblePos) == null){
-                        ChessPiece promotionPiece = new Piece();
-                        /*if(possiblePos.getRow() == 0){
-                            promotionPiece =
-                        }*/
-                        ChessMove aMove = new Move();
-                        aMove.setMove(myPosition, possiblePos, null);
-                        possibleMoves.add(aMove);
+                        if(row != 1) {
+                            ChessPiece promotionPiece = new Piece();
+                            ChessMove aMove = new Move();
+                            aMove.setMove(myPosition, possiblePos, null);
+                            possibleMoves.add(aMove);
+                        }
+                        else{
+                            promotionMoves(myPosition, possiblePos, possibleMoves);
+                        }
                     }
                     for(int i = 0; i < 2; i++){
                         ChessPosition possiblePos2 = new Position();
@@ -71,26 +88,31 @@ public class Piece implements ChessPiece{
                             //right take piece
                             if(board.getPiece(possiblePos2) != null){
                                 if(board.getPiece(possiblePos2).getTeamColor() != color) {
-                                    ChessMove aMove = new Move();
-                                    aMove.setMove(myPosition, possiblePos2, null);
-                                    possibleMoves.add(aMove);
-                                    if (possiblePos2.getRow() == 0) {
-                                        //promote
+                                    if (possiblePos2.getRow() != 1) {
+                                        ChessMove aMove = new Move();
+                                        aMove.setMove(myPosition, possiblePos2, null);
+                                        possibleMoves.add(aMove);
+                                    }
+                                    else {
+                                        promotionMoves(myPosition, possiblePos2, possibleMoves);
                                     }
                                 }
                             }
                         }
-                        if(i == 1 && col-1 > 0){
-                            possiblePos2.setRow(row-1);
-                            possiblePos2.setColumn(col-1);
+                        if(i == 1 || col-1 > 0){
+                            ChessPosition possiblePos3 = new Position();
+                            possiblePos3.setRow(row-1);
+                            possiblePos3.setColumn(col-1);
                             //left take piece
-                            if(board.getPiece(possiblePos2) != null){
-                                if(board.getPiece(possiblePos2).getTeamColor() != color) {
-                                    ChessMove aMove = new Move();
-                                    aMove.setMove(myPosition, possiblePos, null);
-                                    possibleMoves.add(aMove);
-                                    if (possiblePos2.getRow() == 0) {
-                                        //promote
+                            if(board.getPiece(possiblePos3) != null){
+                                if(board.getPiece(possiblePos3).getTeamColor() != color) {
+                                    if (possiblePos3.getRow() != 0) {
+                                        ChessMove aMove = new Move();
+                                        aMove.setMove(myPosition, possiblePos3, null);
+                                        possibleMoves.add(aMove);
+                                    }
+                                    else {
+                                        promotionMoves(myPosition, possiblePos3, possibleMoves);
                                     }
                                 }
                             }
@@ -114,14 +136,20 @@ public class Piece implements ChessPiece{
                         }
                     }
                 }
-                if(row+1 < 8){
+                if(row+1 < 8 || row == 6){
                     ChessPosition possiblePos = new Position();
                     possiblePos.setRow(row+1);
                     possiblePos.setColumn(col);
                     if(board.getPiece(possiblePos) == null){
-                        ChessMove aMove = new Move();
-                        aMove.setMove(myPosition, possiblePos, null);
-                        possibleMoves.add(aMove);
+                        if(row != 6) {
+                            ChessPiece promotionPiece = new Piece();
+                            ChessMove aMove = new Move();
+                            aMove.setMove(myPosition, possiblePos, null);
+                            possibleMoves.add(aMove);
+                        }
+                        else{
+                            promotionMoves(myPosition, possiblePos, possibleMoves);
+                        }
                     }
                     for(int i = 0; i < 2; i++){
                         ChessPosition possiblePos2 = new Position();
@@ -131,9 +159,14 @@ public class Piece implements ChessPiece{
                             //right take piece
                             if(board.getPiece(possiblePos2) != null){
                                 if(board.getPiece(possiblePos2).getTeamColor() != color) {
-                                    ChessMove aMove = new Move();
-                                    aMove.setMove(myPosition, possiblePos2, null);
-                                    possibleMoves.add(aMove);
+                                    if(possiblePos2.getRow() != 0) {
+                                        ChessMove aMove = new Move();
+                                        aMove.setMove(myPosition, possiblePos2, null);
+                                        possibleMoves.add(aMove);
+                                    }
+                                    else{
+                                        promotionMoves(myPosition, possiblePos2, possibleMoves);
+                                    }
                                 }
                             }
                         }
@@ -143,9 +176,14 @@ public class Piece implements ChessPiece{
                             //left take piece
                             if(board.getPiece(possiblePos2) != null){
                                 if(board.getPiece(possiblePos2).getTeamColor() != color) {
-                                    ChessMove aMove = new Move();
-                                    aMove.setMove(myPosition, possiblePos2, null);
-                                    possibleMoves.add(aMove);
+                                    if(possiblePos2.getRow() != 0) {
+                                        ChessMove aMove = new Move();
+                                        aMove.setMove(myPosition, possiblePos2, null);
+                                        possibleMoves.add(aMove);
+                                    }
+                                    else{
+                                        promotionMoves(myPosition, possiblePos2, possibleMoves);
+                                    }
                                 }
                             }
                         }
@@ -623,7 +661,7 @@ public class Piece implements ChessPiece{
         }
         if(piece.getPieceType() == ChessPiece.PieceType.KING){
             possibleMoves.clear();
-            for(int i = 0; i < 8; i++){//right
+            for(int i = 0; i < 8; i++){
                 ChessPosition possiblePos = new Position();
                 if(i == 0){ //right
                     if(myPosition.getColumn() == 7){continue;}
@@ -677,8 +715,6 @@ public class Piece implements ChessPiece{
                     aMove.setMove(myPosition, possiblePos, null);
                     possibleMoves.add(aMove);
                 }
-                possiblePos.setColumn(col);
-                possiblePos.setRow(row);
             }
             /*
             //right
