@@ -87,8 +87,8 @@ public class Piece implements ChessPiece{
                             possiblePos2.setColumn(col+1);
                             //right take piece
                             if(board.getPiece(possiblePos2) != null){
-                                if(board.getPiece(possiblePos2).getTeamColor() != color) {
-                                    if (possiblePos2.getRow() != 1) {
+                                if(board.getPiece(possiblePos2).getTeamColor() != piece.getTeamColor()) {
+                                    if (row != 1) {
                                         ChessMove aMove = new Move();
                                         aMove.setMove(myPosition, possiblePos2, null);
                                         possibleMoves.add(aMove);
@@ -99,12 +99,12 @@ public class Piece implements ChessPiece{
                                 }
                             }
                         }
-                        if(i == 1 || col-1 > 0){
+                        if(i == 1 || col-1 >= 0){
                             ChessPosition possiblePos3 = new Position();
                             possiblePos3.setRow(row-1);
                             possiblePos3.setColumn(col-1);
                             //left take piece
-                            if(col- 1 > 0 && row - 1 > 0) {
+                            if(col- 1 >= 0 && row - 1 >= 0) {
                                 if (board.getPiece(possiblePos3) != null) {
                                     if (board.getPiece(possiblePos3).getTeamColor() != color) {
                                         if (possiblePos3.getRow() != 0) {
@@ -545,6 +545,7 @@ public class Piece implements ChessPiece{
                     possibleMoves.add(aMove);
                 }
             }
+            int upCounter = myPosition.getRow() + 1;
             for(int left = myPosition.getColumn() - 1; left >= 0; left--) {
                 //up left diagnal
                 if(left < 0 || breakLoop == true){
@@ -552,15 +553,15 @@ public class Piece implements ChessPiece{
                     break;
                 }
                 for (int up = myPosition.getRow() + 1; up < 8; up++) {
-                    if(up >= 8){
+                    if(up >= 8 || upCounter >= 8){
                         left = -1;
                         break;
                     }
-                    if(up == 7){
+                    if(up == 7 || upCounter == 7){
                         breakLoop = true;
                     }
                     ChessPosition possiblePos = new Position();
-                    possiblePos.setRow(up);
+                    possiblePos.setRow(upCounter);
                     possiblePos.setColumn(left);
                     if (board.getPiece(possiblePos) != null) {
                         if (board.getPiece(possiblePos).getTeamColor() != color) {
@@ -568,15 +569,17 @@ public class Piece implements ChessPiece{
                             aMove.setMove(myPosition, possiblePos, null);
                             possibleMoves.add(aMove);
                         }
-                        left = -1;
+                        //left = -1;
                         breakLoop = true;
+                        upCounter += 1;
                         break;
                     }
                     else {
                         ChessMove aMove = new Move();
                         aMove.setMove(myPosition, possiblePos, null);
                         possibleMoves.add(aMove);
-                        left -= 1;
+                        upCounter += 1;
+                        //left -= 1;
                         break;
                     }
                 }

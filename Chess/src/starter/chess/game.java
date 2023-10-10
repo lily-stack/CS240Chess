@@ -60,12 +60,17 @@ public class game implements ChessGame{
         ChessPosition startPos = move.getStartPosition();
         ChessPiece piece = board.getPiece(startPos);
         Collection<ChessMove> possibleMoves = validMoves(move.getStartPosition());
-        if(possibleMoves.contains(move)){
-            if(move.getPromotionPiece() != null){
+        if (possibleMoves.contains(move) && piece.getTeamColor() == color) {
+            if (move.getPromotionPiece() != null) {
                 piece.SetType(move.getPromotionPiece());
             }
             board.addPiece(endPos, board.getPiece(startPos));
             board.deletePiece(startPos);
+            if (piece.getTeamColor() == TeamColor.WHITE) {
+                color = TeamColor.BLACK;
+            } else {
+                color = TeamColor.WHITE;
+            }
         }
 
         else{
@@ -76,6 +81,9 @@ public class game implements ChessGame{
     @Override
     public boolean isInCheck(TeamColor teamColor) {
         ChessPosition king = findKing(teamColor);
+        if(king == null){
+            return false;
+        }
         ChessPiece tempPiece;
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 8; j++){
@@ -146,7 +154,7 @@ public class game implements ChessGame{
                 pos.setColumn(i);
                 pos.setRow(j);
                 ChessPiece piece = board.getPiece(pos);
-                if (piece != null && piece.getTeamColor() == teamColor && !piece.pieceMoves(board,pos).isEmpty()){
+                if (piece != null && piece.getTeamColor() == teamColor && !validMoves(pos).isEmpty()){
                     return false;
                 }
             }
