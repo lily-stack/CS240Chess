@@ -2,6 +2,9 @@ package Services;
 
 import Models.AuthToken;
 
+/**
+ * represents a response to a CreateGameRequest and contains variable gameName
+ */
 public class CreateGameResponse {
     private String gameName;
     /**
