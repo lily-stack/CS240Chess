@@ -1,10 +1,16 @@
-package Services;
+package Requests;
 
 /**
  * Represents a request for joining a game and contains the variables username and password
  */
 public class JoinGameRequest {
+    /**
+     * string representing the color of a player
+     */
     private String playerColor;
+    /**
+     * int representing the ID of a game
+     */
     private int gameID;
 
     /**

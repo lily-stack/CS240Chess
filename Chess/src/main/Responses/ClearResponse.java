@@ -1,4 +1,4 @@
-package Services;
+package Responses;
 
 /**
  * represents a response to a ClearRequest

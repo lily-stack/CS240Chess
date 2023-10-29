@@ -1,4 +1,4 @@
-package Services;
+package Requests;
 
 /**
  * Represents a request from a user to create a game

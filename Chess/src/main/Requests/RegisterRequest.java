@@ -1,4 +1,4 @@
-package Services;
+package Requests;
 
 import Models.User;
 
@@ -6,8 +6,17 @@ import Models.User;
  * represents a request to register a specific user and has the variables username and password
  */
 public class RegisterRequest {
+    /**
+     * string representing a username
+     */
     private String username;
+    /**
+     * string representing a password
+     */
     private String password;
+    /**
+     * string representing a user's email
+     */
     private String email;
 
     /**

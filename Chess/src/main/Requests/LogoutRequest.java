@@ -1,4 +1,4 @@
-package Services;
+package Requests;
 
 import Models.AuthToken;
 
@@ -9,6 +9,6 @@ public class LogoutRequest {
     /**
      * creates an instance of a user's request to logout
      */
-    public LogoutRequest(){}
+    public LogoutRequest(String authToken){}
 
 }

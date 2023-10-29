@@ -1,4 +1,4 @@
-package Services;
+package Requests;
 
 import Models.User;
 
@@ -6,7 +6,13 @@ import Models.User;
  * Represents a request from a user to login to the game and contains the variables username and password
  */
 public class LoginRequest {
+    /**
+     * string representing the username
+     */
     private String username;
+    /**
+     * string representing a password
+     */
     private String password;
 
     /**

@@ -1,17 +1,62 @@
 package Services;
 
+import DataAccess.AuthDao;
+import DataAccess.GameDao;
+import Models.AuthToken;
+import Models.GameModel;
+import Requests.ListGamesRequest;
+import Responses.ListGamesResponse;
+import dataAccess.DataAccessException;
+
+import java.util.Collection;
+
 /**
  * implements the logic for an HTTP GET method for listing all games
  *
  */
 public class ListGamesService {
+    private AuthDao authDao = new AuthDao();
+    private GameDao gameDao = new GameDao();
     /**
      * Receives a ListGamesRequest object and returns a corresponding ListGamesResponse object
-     * @param request of type ListGamesRequest
+     *
      * @return ListGamesResponse
      */
-    public ListGamesResponse listGames(ListGamesRequest request) {
-        return null;
+    public ListGamesResponse listGames(String authToken) {
+        ListGamesResponse listGamesResponse = new ListGamesResponse();
+        try{
+            if(authDao.Find(authToken) == null){
+                listGamesResponse.setStatus(401);
+                return listGamesResponse;
+            };
+        }
+        catch(DataAccessException e){
+            listGamesResponse.setStatus(401);
+        }
+        try{
+            listGamesResponse.gameList = gameDao.FindAll();
+            listGamesResponse.setStatus(200);
+            return listGamesResponse;
+        }
+        catch(DataAccessException e){
+            listGamesResponse.setStatus(401);
+            return listGamesResponse;
+        }
+    }
+    public int checkGameList(String authToken){
+        try{
+            gameDao.FindAll();
+        }
+        catch(DataAccessException e){
+            return 500;
+        }
+        try{
+            authDao.Find(authToken);
+        }
+        catch(DataAccessException e){
+            return 401;
+        }
+        return 200;
     }
 
 }

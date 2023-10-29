@@ -1,18 +1,27 @@
-package Services;
+package Responses;
 
 /**
- * represents a response to a LoginRequest and contains variables for an error message, authToken, and username
+ * represents a response to a JoinGameRequest and contains variables for an error message, authToken, and username
  */
 
-public class LoginResponse {
+public class JoinGameResponse {
+    /**
+     * string that holds an error message
+     */
     private String message;
+    /**
+     * string that holds the token for authentication
+     */
     private String authToken;
+    /**
+     * string representing a username
+     */
     private String username;
 
     /**
-     * creates an instance of a response for a login request
+     *creates an instance of a response for joining a game
      */
-    public LoginResponse() {}
+    public JoinGameResponse() {}
     // … Getters and Setters for message, authToken, and username properties
     public String getMessage(){
         return message;

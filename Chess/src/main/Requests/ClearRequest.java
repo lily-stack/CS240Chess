@@ -1,4 +1,4 @@
-package Services;
+package Requests;
 
 /**
  *  Represents a request for clearing a game
