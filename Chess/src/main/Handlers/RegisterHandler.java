@@ -5,7 +5,6 @@ import Services.RegisterService;
 import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;
-
 import java.util.Map;
 
 public class RegisterHandler {
@@ -14,7 +13,7 @@ public class RegisterHandler {
         int status = 200;
         String message = "";
         RegisterRequest registerRequest = new Gson().fromJson(req.body(), RegisterRequest.class);
-        RegisterResponse registerResponse = new RegisterResponse();
+        RegisterResponse registerResponse;
         registerResponse = service.register(registerRequest.getUsername(),registerRequest.getPassword(), registerRequest.getEmail());
         status = registerResponse.getStatus();
         if(registerRequest.getUsername()==null || registerRequest.getEmail()==null || registerRequest.getPassword()==null){

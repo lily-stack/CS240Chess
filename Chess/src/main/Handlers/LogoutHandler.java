@@ -1,17 +1,9 @@
 package Handlers;
 
-import Models.AuthToken;
-import Models.GameModel;
-import Requests.ListGamesRequest;
-import Requests.LogoutRequest;
-import Responses.LoginResponse;
-import Responses.LogoutResponse;
-import Services.ListGamesService;
 import Services.LogoutService;
 import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;
-
 import java.util.Map;
 
 public class LogoutHandler {

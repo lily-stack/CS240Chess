@@ -1,5 +1,4 @@
 package Models;
-import chess.ChessGame;
 
 import java.util.Objects;
 

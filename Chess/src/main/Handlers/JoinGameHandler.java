@@ -1,18 +1,13 @@
 package Handlers;
 import Models.GameModel;
 import Requests.JoinGameRequest;
-import Responses.JoinGameResponse;
 import Services.JoinGameService;
 import dataAccess.DataAccessException;
 import spark.*;
 import com.google.gson.Gson;
-
 import java.util.Map;
-import java.util.Objects;
 
 public class JoinGameHandler {
-    public Response Request(Request req, Response res){return null;}
-
     public Object handleRequest(Request req, Response res) throws DataAccessException {
         JoinGameService service = new JoinGameService();
         int status = 200;
@@ -45,14 +40,5 @@ public class JoinGameHandler {
         res.status(status);
         res.body(new Gson().toJson(Map.of("message",message)));
         return new Gson().toJson(Map.of("message", message));
-/**
-        Gson gson = new Gson();
-        JoinGameRequest request = (JoinGameRequest)gson.fromJson(req.body(), JoinGameRequest.class);
-        JoinGameService service = new JoinGameService();
-
-        JoinGameResponse result = service.join(request);
-
-        return gson.toJson(result);
- **/
     }
 }

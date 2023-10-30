@@ -3,9 +3,6 @@ package Services;
 import DataAccess.AuthDao;
 import DataAccess.UserDao;
 import Models.AuthToken;
-import Models.User;
-import Requests.LoginRequest;
-import Responses.LoginResponse;
 import dataAccess.DataAccessException;
 
 /**

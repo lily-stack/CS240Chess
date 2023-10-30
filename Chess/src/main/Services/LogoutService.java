@@ -1,10 +1,6 @@
 package Services;
 
 import DataAccess.AuthDao;
-import Models.AuthToken;
-import Requests.LogoutRequest;
-import Responses.LogoutResponse;
-import dataAccess.DataAccessException;
 
 /**
  * implements the logic for an HTTP DELETE method for logging out of a game

@@ -1,11 +1,6 @@
 import Handlers.*;
-import com.google.gson.Gson;
-import org.glassfish.grizzly.http.server.HttpServer;
 import spark.*;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
 public class Server {
     private void run() {
         Spark.port(8080);
@@ -19,10 +14,6 @@ public class Server {
         Spark.get("/game", (req, res) -> (new ListGameHandler()).handleRequest(req, res));
         Spark.post("/game", (req, res) -> (new CreateGameHandler()).handleRequest(req, res));
         Spark.put("/game", (req, res) -> (new JoinGameHandler()).handleRequest(req, res));
-
-
-
-
     }
     public static void main(String[] args){
         new Server().run();

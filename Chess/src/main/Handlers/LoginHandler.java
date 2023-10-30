@@ -1,15 +1,12 @@
 package Handlers;
 
 import Models.AuthToken;
-import Models.GameModel;
-import Requests.JoinGameRequest;
 import Requests.LoginRequest;
 import Responses.LoginResponse;
 import Services.LoginService;
 import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;
-
 import java.util.Map;
 
 public class LoginHandler {

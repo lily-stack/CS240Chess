@@ -1,6 +1,5 @@
 package Responses;
 
-import Models.AuthToken;
 import Models.GameModel;
 
 import java.util.Collection;
@@ -16,11 +15,6 @@ public class ListGamesResponse {
      * creates an instance of a response for listing games
      */
     public ListGamesResponse(){}
-    /**
-     * authorizes logging out of game
-     * @param authToken
-     */
-    public void Authorization(AuthToken authToken){}
 
     public void setGames(Collection<GameModel> games) {
         this.games = games;

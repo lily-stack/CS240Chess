@@ -1,7 +1,6 @@
 package Services;
 
 import DataAccess.UserDao;
-import Requests.RegisterRequest;
 import Responses.RegisterResponse;
 import dataAccess.DataAccessException;
 

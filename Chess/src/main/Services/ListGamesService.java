@@ -2,13 +2,8 @@ package Services;
 
 import DataAccess.AuthDao;
 import DataAccess.GameDao;
-import Models.AuthToken;
-import Models.GameModel;
-import Requests.ListGamesRequest;
 import Responses.ListGamesResponse;
 import dataAccess.DataAccessException;
-
-import java.util.Collection;
 
 /**
  * implements the logic for an HTTP GET method for listing all games

@@ -3,11 +3,7 @@ package Services;
 import DataAccess.AuthDao;
 import DataAccess.GameDao;
 import DataAccess.UserDao;
-import Requests.ClearRequest;
-import Responses.ClearResponse;
 import dataAccess.DataAccessException;
-
-import java.io.IOException;
 
 /**
  * implements the logic for an HTTP DELETE method for deleting a game

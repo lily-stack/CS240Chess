@@ -26,7 +26,6 @@ public class JoinGameService {
      */
     public int join(int gameID, String authToken, String color) throws DataAccessException {
         GameModel game;
-        String user;
         //check if gameID is in list of games
         try{
             game = gameDao.Find(gameID);

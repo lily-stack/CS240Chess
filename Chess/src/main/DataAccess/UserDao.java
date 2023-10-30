@@ -1,13 +1,9 @@
 package DataAccess;
 
-import Models.GameModel;
 import Models.User;
 import dataAccess.DataAccessException;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * Data Access Object(Dao) class for storing and retrieving the server's data for the user
@@ -32,12 +28,6 @@ public class UserDao {
         Insert(newUser);
     }
     /**
-     * deletes a user object
-     * @param u of type User
-     * @throws DataAccessException throws an exception if user can't be deleted
-     */
-    public void DeleteUser(User u) throws DataAccessException{}
-    /**
      * a method for clearing all data from the database about the user
      */
     public void clear(){
@@ -48,13 +38,12 @@ public class UserDao {
      *
      * @param user of type User
      */
-    public void Insert(User user)throws DataAccessException{
+    public void Insert(User user){
         userList.put(user.username, user);
     }
     /**
      * a method for finding a specific object based on a username
      */
-
     public int FindUser(String username, String password)throws DataAccessException{
         if(userList.containsKey(username)){
             if(Objects.equals(userList.get(username).password, password)){

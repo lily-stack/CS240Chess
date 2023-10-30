@@ -16,7 +16,6 @@ public class RegisterResponse {
      * string representing a username
      */
     private String username;
-
     private String password;
     private String email;
     public int status;

@@ -2,7 +2,6 @@ package DataAccess;
 
 import Models.AuthToken;
 import dataAccess.DataAccessException;
-
 import java.util.*;
 
 /**
