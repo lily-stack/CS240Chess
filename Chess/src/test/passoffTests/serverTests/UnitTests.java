@@ -6,7 +6,6 @@ import DataAccess.UserDao;
 import Models.AuthToken;
 import Models.GameModel;
 import Models.User;
-import Requests.LoginRequest;
 import Responses.RegisterResponse;
 import Services.*;
 import dataAccess.DataAccessException;
@@ -141,7 +140,7 @@ public class UnitTests {
         RegisterService registerService = new RegisterService();
         registerService.register(USER1, PASSWORD1, EMAIL1);
         LogoutService logoutService = new LogoutService();
-        Assertions.assertEquals(200, logoutService.logout("fakeAuth"));
+        Assertions.assertEquals(401, logoutService.logout("fakeAuth"));
     }
     @Test
     public void ListGamesPassTest()throws DataAccessException{

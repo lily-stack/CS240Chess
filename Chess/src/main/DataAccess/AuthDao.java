@@ -4,7 +4,6 @@ import Models.AuthToken;
 import dataAccess.DataAccessException;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Data Access Object(Dao) class for storing and retrieving the server's data for authentication
@@ -35,6 +34,10 @@ public class AuthDao {
         authenticationList.clear();
     }
 
+    /**
+     * a method for deleting a token
+     * @param token of type string
+     */
     public void deleteToken(String token){
         authenticationList.remove(token);
     }
@@ -55,7 +58,7 @@ public class AuthDao {
 
     /**
      * a method for finding a specific object based on an authToken
-     *
+     *@param token of type String
      */
     public String Find(String token){
         if(authenticationList.get(token) != null) {
