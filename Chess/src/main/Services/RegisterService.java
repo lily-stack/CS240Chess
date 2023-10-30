@@ -24,21 +24,19 @@ public class RegisterService {
         registerResponse.setStatus(200);
         registerResponse.setUsername(username);
         try{
-            if (userDao.FindUser(username, password) != 200){
-                throw new Exception("Exception message");
+            if (userDao.FindUser(username, password) == 200){
+                registerResponse.setStatus(403);
+                return registerResponse;
             }
         }
         catch(DataAccessException e){
-             registerResponse.setStatus(400);
-        }
-        catch (Exception e) {
-            registerResponse.setStatus(403);
+             registerResponse.setStatus(403);
         }
         try{
             userDao.CreateUser(username, password, email);
         }
         catch(DataAccessException e){
-            registerResponse.setStatus(400);
+            registerResponse.setStatus(403);
         }
         registerResponse.setAuthToken(loginService.login(username, password).authToken);
         return registerResponse;

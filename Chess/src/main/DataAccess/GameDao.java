@@ -11,7 +11,7 @@ import java.util.*;
  * Data Access Object(Dao) class for storing and retrieving the server's data for the game
  */
 public class GameDao {
-    int gameID;
+    public static int game_ID = 1;
     /**
      * a map for ordering the game's and being able to easily find and access them
      */

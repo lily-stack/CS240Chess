@@ -21,14 +21,11 @@ public class CreateGameService {
      * @return CreateGameResponse
      */
     public int create(GameModel game, String authToken) throws DataAccessException {
-        try{
+        GameDao.game_ID += 66;
+        game.setGameID(GameDao.game_ID);
             if(authDao.Find(authToken) == null){
                 return 401;
             }
-        }
-        catch(DataAccessException e){
-            return 401;
-        }
         try{
             gameDao.Insert(game);
         }

@@ -22,21 +22,24 @@ public class LogoutHandler {
         String authToken = req.headers("Authorization");
         status = service.logout(authToken);
         if (status == 401){
+            res.status(status);
             message = "Error: unauthorized";
             res.type("application/json");
             res.body(new Gson().toJson(Map.of("message",message)));
             return new Gson().toJson(Map.of("message", message));
         }
         else if (status == 500){
+            res.status(status);
             message = "Error: description";
             res.type("application/json");
             res.body(new Gson().toJson(Map.of("message",message)));
             return new Gson().toJson(Map.of("message", message));
         }
         else{
-            //res.body(new Gson().toJson(status));
+            res.status(status);
             res.type("application/json");
-            return new Gson().toJson(status);
+            res.body(new Gson().toJson(Map.of("message",message)));
+            return new Gson().toJson(Map.of("message", message));
         }
     }
 }

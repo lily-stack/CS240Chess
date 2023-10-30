@@ -11,7 +11,7 @@ public class RegisterResponse {
     /**
      * string representing a token for authentication
      */
-    private String authToken;
+    public String authToken;
     /**
      * string representing a username
      */
@@ -19,7 +19,7 @@ public class RegisterResponse {
 
     private String password;
     private String email;
-    private int status;
+    public int status;
 
     /**
      * creates an instance of a response for a register request

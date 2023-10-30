@@ -24,17 +24,12 @@ public class ListGamesService {
      */
     public ListGamesResponse listGames(String authToken) {
         ListGamesResponse listGamesResponse = new ListGamesResponse();
-        try{
-            if(authDao.Find(authToken) == null){
-                listGamesResponse.setStatus(401);
-                return listGamesResponse;
-            };
-        }
-        catch(DataAccessException e){
+        if(authDao.Find(authToken) == null){
             listGamesResponse.setStatus(401);
+            return listGamesResponse;
         }
         try{
-            listGamesResponse.gameList = gameDao.FindAll();
+            listGamesResponse.setGames(gameDao.FindAll());
             listGamesResponse.setStatus(200);
             return listGamesResponse;
         }
@@ -50,10 +45,7 @@ public class ListGamesService {
         catch(DataAccessException e){
             return 500;
         }
-        try{
-            authDao.Find(authToken);
-        }
-        catch(DataAccessException e){
+        if(authDao.Find(authToken) == null){
             return 401;
         }
         return 200;

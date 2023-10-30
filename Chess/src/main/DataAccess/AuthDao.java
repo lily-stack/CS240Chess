@@ -55,9 +55,9 @@ public class AuthDao {
 
     /**
      * a method for finding a specific object based on an authToken
-     * @throws DataAccessException throws an exception if authToken can't be found
+     *
      */
-    public String Find(String token)throws DataAccessException{
+    public String Find(String token){
         if(authenticationList.get(token) != null) {
             return authenticationList.get(token).username;
         }

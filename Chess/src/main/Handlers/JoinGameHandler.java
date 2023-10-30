@@ -8,6 +8,7 @@ import spark.*;
 import com.google.gson.Gson;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class JoinGameHandler {
     public Response Request(Request req, Response res){return null;}
@@ -30,6 +31,9 @@ public class JoinGameHandler {
         }
         if(status == 401){
             message = "Error: unauthorized";
+        }
+        else if (status == 400){
+            message = "Error: bad request";
         }
         else if(status == 403){
             message = "Error: already taken";

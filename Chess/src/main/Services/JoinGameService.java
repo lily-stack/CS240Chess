@@ -37,11 +37,9 @@ public class JoinGameService {
         catch(DataAccessException e){
             return 400;
         }
+        String username = authDao.Find(authToken);
         //check if user is authorized
-        try{
-            user = authDao.Find(authToken);
-        }
-        catch(DataAccessException e){
+        if(username == null){
             return 401;
         }
         if(Objects.equals(color, "WHITE")){
@@ -49,15 +47,15 @@ public class JoinGameService {
                 return 403;
             }
             else{
-                game.setWhiteUsername(color);
+                game.setWhiteUsername(username);
             }
         }
-        else if(color == "BLACK"){
+        else if(Objects.equals(color, "BLACK")){
             if(game.blackUsername != null) {
                 return 403;
             }
             else{
-                game.setBlackUsername(color);
+                game.setBlackUsername(username);
             }
         }
         return 200;

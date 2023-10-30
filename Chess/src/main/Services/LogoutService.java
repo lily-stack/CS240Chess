@@ -17,12 +17,10 @@ public class LogoutService {
      * @return LogoutResponse
      */
     public int logout(String authToken) {
-        try {
-            authDao.Find(authToken);
-        }
-        catch(DataAccessException e){
+        if(authDao.Find(authToken) == null){
             return 401;
         }
+
         authDao.deleteToken(authToken);
         return 200;
     }

@@ -28,18 +28,21 @@ public class ListGameHandler {
         res.type("application/json");
         res.status(status);
         if (status == 401){
-            message = "Error: unauthorized";
+            res.status(status);
+            listResponse.setMessage(message = "Error: unauthorized");
             res.type("application/json");
             res.body(new Gson().toJson(listResponse));
             return new Gson().toJson(listResponse);
         }
         else if (status == 500){
-            message = "Error: description";
+            res.status(status);
+            listResponse.setMessage(message = "Error: description");
             res.type("application/json");
             res.body(new Gson().toJson(listResponse));
             return new Gson().toJson(listResponse);
         }
         else{
+            res.status(status);
             res.type("application/json");
             res.body(new Gson().toJson(listResponse));
             return new Gson().toJson(listResponse);

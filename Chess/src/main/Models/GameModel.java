@@ -1,6 +1,8 @@
 package Models;
 import chess.ChessGame;
 
+import java.util.Objects;
+
 /**
  * a class to store the gameId, black and white username and the game name for a game
  */
@@ -53,5 +55,16 @@ public class GameModel {
 
     public String getBlackUsername() {
         return blackUsername;
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GameModel gameModel = (GameModel) o;
+        return gameID == gameModel.gameID && Objects.equals(whiteUsername, gameModel.whiteUsername) && Objects.equals(blackUsername, gameModel.blackUsername) && Objects.equals(gameName, gameModel.gameName) && Objects.equals(game, gameModel.game);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(gameID, whiteUsername, blackUsername, gameName, game);
     }
 }

@@ -12,7 +12,6 @@ import spark.Response;
 import java.util.Map;
 
 public class CreateGameHandler {
-    int gameID = 0;
     public Object handleRequest(Request req, Response res) throws DataAccessException {
         CreateGameService service = new CreateGameService();
         int status = 200;
@@ -25,8 +24,6 @@ public class CreateGameHandler {
             message = "Error: bad request";
         }
         else{
-            gameID += 66;
-            newGame.setGameID(this.gameID);
             status = service.create(newGame, authToken);
         }
         if(status == 401){
@@ -34,6 +31,12 @@ public class CreateGameHandler {
         }
         else if(status == 500){
             message = "Error: description";
+        }
+        if(status == 200){
+            res.type("application/json");
+            res.status(status);
+            res.body(new Gson().toJson(Map.of("gameID",newGame.gameID)));
+            return new Gson().toJson(Map.of("gameID", newGame.gameID));
         }
         res.type("application/json");
         res.status(status);

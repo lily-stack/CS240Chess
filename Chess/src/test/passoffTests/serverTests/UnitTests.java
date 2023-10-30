@@ -7,6 +7,7 @@ import Models.AuthToken;
 import Models.GameModel;
 import Models.User;
 import Requests.LoginRequest;
+import Responses.RegisterResponse;
 import Services.*;
 import dataAccess.DataAccessException;
 import org.junit.jupiter.api.*;
@@ -76,7 +77,8 @@ public class UnitTests {
     public void RegisterServicePassTest(){
         ClearAll();
         RegisterService registerService = new RegisterService();
-        registerService.register(USER1, PASSWORD1, EMAIL1);
+        RegisterResponse response = registerService.register(USER1, PASSWORD1, EMAIL1);
+        Assertions.assertNotNull(response.authToken);
         try {
             userDao.FindUser(USER1, PASSWORD1);
         }
@@ -88,14 +90,10 @@ public class UnitTests {
     public void RegisterServiceFailTest(){
         ClearAll();
         RegisterService registerService = new RegisterService();
-        registerService.register(USER1, PASSWORD1, EMAIL1);
-        registerService.register(USER1, PASSWORD1, EMAIL1);
-        try {
-            userDao.FindUser(USER1, PASSWORD1);
-        }
-        catch(DataAccessException e){
-            Assertions.fail("failed register test: could not find user");
-        }
+        RegisterResponse response = new RegisterResponse();
+        response = registerService.register(USER1, PASSWORD1, EMAIL1);
+        response = registerService.register(USER1, PASSWORD1, EMAIL1);
+        Assertions.assertEquals(403, response.getStatus());
     }
     @Test
     public void LoginPassTest()throws DataAccessException{
