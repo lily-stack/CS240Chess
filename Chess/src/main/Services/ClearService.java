@@ -9,6 +9,7 @@ import dataAccess.DataAccessException;
  * implements the logic for an HTTP DELETE method for deleting a game
  */
 public class ClearService {
+
     AuthDao authDao = new AuthDao();
     UserDao userDao = new UserDao();
     GameDao gameDao = new GameDao();

@@ -6,10 +6,19 @@ import DataAccess.UserDao;
 import Models.AuthToken;
 import Models.GameModel;
 import Models.User;
+import Responses.JoinGameResponse;
+import Responses.ListGamesResponse;
 import Responses.RegisterResponse;
 import Services.*;
+import chess.ChessGame;
+import chess.game;
 import dataAccess.DataAccessException;
 import org.junit.jupiter.api.*;
+
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 
 public class UnitTests {
     String USER1 = "user1";
@@ -24,45 +33,58 @@ public class UnitTests {
     GameDao gameDao = new GameDao();
     ClearService clearService = new ClearService();
     @Test
-    public void ClearAll(){
+    public void ClearAll() throws DataAccessException {
+        ClearService clearService = new ClearService();
+        clearService.clear();
         int status = 200;
-        try{
-            userDao.CreateUser("clearuser","clearpassword","clearemail");
-        }
-        catch(DataAccessException e){
-            Assertions.fail();
-        }
+        User newUser = new User();
+        newUser.username = "clearuser";
+        newUser.password = "clearpassword";
+        newUser.email = "clearemail";
+
         try {
+            userDao.Insert(newUser);
+            Assertions.assertEquals(200,userDao.FindUser(newUser.username, newUser.password));
             clearService.clear();
         }
         catch(DataAccessException e){
             Assertions.fail();
         }
+        Assertions.assertEquals(401, userDao.FindUser(newUser.username, newUser.password));
         try {
-            status = userDao.FindUser("clearuser", "clearpassword");
-            if(status == 200){
-                Assertions.fail("Found user when there should be no users");
-            }
+            userDao.Insert(newUser);
+            Assertions.assertEquals(200,userDao.FindUser(newUser.username, newUser.password));
+            clearService.clear();
+            clearService.clear();
+            clearService.clear();
         }
         catch(DataAccessException e){
-            Assertions.assertTrue(status==403);
+            Assertions.fail();
         }
     }
     @Test
-    public void CreateGameServicePassTest()throws DataAccessException{
-        ClearAll();
+    public void CreateGameServicePassTest()throws DataAccessException {
+        ChessGame chessgame = new game();
+        ClearService clearService = new ClearService();
+        clearService.clear();
         CreateGameService gameservice = new CreateGameService();
         GameModel game = new GameModel();
         game.gameID = 1;
+        game.whiteUsername = USER1;
+        game.blackUsername = USER2;
+        game.game = chessgame;
         AuthToken authToken = new AuthToken();
         authToken.username = USER1;
         authToken.authToken = AUTHTOKEN;
         authDao.Insert(authToken);
         Assertions.assertEquals(200, gameservice.create(game, AUTHTOKEN));
+        Assertions.assertEquals(USER1,authDao.Find(authToken.authToken));
+        Assertions.assertEquals(1, (gameDao.Find(game.gameID)).gameID);
     }
     @Test
     public void CreateGameServiceFailTest()throws DataAccessException{
-        ClearAll();
+        ClearService clearService = new ClearService();
+        clearService.clear();
         CreateGameService gameservice = new CreateGameService();
         GameModel game = new GameModel();
         game.gameID = 1;
@@ -70,14 +92,22 @@ public class UnitTests {
         authToken.username = USER1;
         authToken.authToken = AUTHTOKEN;
         authDao.Insert(authToken);
+        Assertions.assertEquals(USER1,authDao.Find(authToken.authToken));
         Assertions.assertEquals(401, gameservice.create(game, "notToken"));
+        GameModel newGame = new GameModel();
+        //Assertions.assertEquals(400, gameservice.create(newGame, AUTHTOKEN));
     }
     @Test
-    public void RegisterServicePassTest(){
-        ClearAll();
+    public void RegisterServicePassTest() throws DataAccessException {
+        ClearService clearService = new ClearService();
+        clearService.clear();
         RegisterService registerService = new RegisterService();
         RegisterResponse response = registerService.register(USER1, PASSWORD1, EMAIL1);
         Assertions.assertNotNull(response.authToken);
+        Assertions.assertEquals(200, response.status);
+        Assertions.assertEquals(EMAIL1,response.getEmail());
+        Assertions.assertEquals(USER1,response.getUsername());
+        Assertions.assertEquals(PASSWORD1,response.getPassword());
         try {
             userDao.FindUser(USER1, PASSWORD1);
         }
@@ -86,33 +116,54 @@ public class UnitTests {
         }
     }
     @Test
-    public void RegisterServiceFailTest(){
-        ClearAll();
+    public void RegisterServiceFailTest() throws DataAccessException {
+        ClearService clearService = new ClearService();
+        clearService.clear();
         RegisterService registerService = new RegisterService();
         RegisterResponse response = new RegisterResponse();
         response = registerService.register(USER1, PASSWORD1, EMAIL1);
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertEquals(USER1, response.getUsername());
+        Assertions.assertEquals(EMAIL1, response.getEmail());
+        Assertions.assertEquals(PASSWORD1, response.getPassword());
+        Assertions.assertNotNull(response.getAuthToken());
         response = registerService.register(USER1, PASSWORD1, EMAIL1);
         Assertions.assertEquals(403, response.getStatus());
+        Assertions.assertNull(response.getAuthToken());
+        Assertions.assertEquals(USER1, response.getUsername());
     }
     @Test
     public void LoginPassTest()throws DataAccessException{
-        ClearAll();
+        ClearService clearService = new ClearService();
+        clearService.clear();
         RegisterService registerService = new RegisterService();
-        registerService.register(USER1, PASSWORD1, EMAIL1);
+        RegisterResponse response = registerService.register(USER1, PASSWORD1, EMAIL1);
+        Assertions.assertEquals(200, userDao.FindUser(USER1, PASSWORD1));
+        Assertions.assertEquals(EMAIL1,response.getEmail());
+        Assertions.assertEquals(PASSWORD1,response.getPassword());
+        Assertions.assertEquals(USER1, response.getUsername());
         LoginService loginService = new LoginService();
         Assertions.assertEquals(200, loginService.loginTest(USER1, PASSWORD1));
+        Assertions.assertNotNull(loginService.login(USER1, PASSWORD1));
     }
     @Test
     public void LoginFailTest()throws DataAccessException{
-        ClearAll();
+        ClearService clearService = new ClearService();
+        clearService.clear();
         RegisterService registerService = new RegisterService();
-        registerService.register(USER1, PASSWORD1, EMAIL1);
+        RegisterResponse response = registerService.register(USER1, PASSWORD1, EMAIL1);
+        Assertions.assertEquals(200, userDao.FindUser(USER1, PASSWORD1));
+        Assertions.assertEquals(EMAIL1,response.getEmail());
+        Assertions.assertEquals(PASSWORD1,response.getPassword());
+        Assertions.assertEquals(USER1, response.getUsername());
         LoginService loginService = new LoginService();
         Assertions.assertEquals(401, loginService.loginTest(USER2,PASSWORD2));
+        Assertions.assertNull(loginService.login(USER2, PASSWORD2));
     }
     @Test
     public void LogoutPassTest()throws DataAccessException{
-        ClearAll();
+        ClearService clearService = new ClearService();
+        clearService.clear();
         User user = new User();
         user.username = USER1;
         user.email = EMAIL1;
@@ -122,45 +173,66 @@ public class UnitTests {
         authToken.authToken = AUTHTOKEN;
         authDao.Insert(authToken);
         RegisterService registerService = new RegisterService();
-        registerService.register(USER1, PASSWORD1, EMAIL1);
+        RegisterResponse response = registerService.register(USER1, PASSWORD1, EMAIL1);
+        Assertions.assertEquals(200, userDao.FindUser(USER1, PASSWORD1));
+        Assertions.assertEquals(EMAIL1,response.getEmail());
+        Assertions.assertEquals(PASSWORD1,response.getPassword());
+        Assertions.assertEquals(USER1, response.getUsername());
         LogoutService logoutService = new LogoutService();
         Assertions.assertEquals(200, logoutService.logout(AUTHTOKEN));
+        Assertions.assertNull(authDao.Find(AUTHTOKEN));
     }
     @Test
     public void LogoutFailTest()throws DataAccessException{
-        ClearAll();
+        ClearService clearService = new ClearService();
+        clearService.clear();
         User user = new User();
         user.username = USER1;
         user.email = EMAIL1;
         user.password = PASSWORD1;
         AuthToken authToken = new AuthToken();
         authToken.username = USER1;
-        authToken.authToken = AUTHTOKEN;
-        authDao.Insert(authToken);
         RegisterService registerService = new RegisterService();
-        registerService.register(USER1, PASSWORD1, EMAIL1);
+        RegisterResponse response = registerService.register(USER1, PASSWORD1, EMAIL1);
+        Assertions.assertEquals(200, userDao.FindUser(USER1, PASSWORD1));
+        Assertions.assertEquals(EMAIL1,response.getEmail());
+        Assertions.assertEquals(PASSWORD1,response.getPassword());
+        Assertions.assertEquals(USER1, response.getUsername());
+        Assertions.assertNotNull(response.authToken);
+        Assertions.assertEquals(USER1,authDao.Find(response.authToken));
         LogoutService logoutService = new LogoutService();
         Assertions.assertEquals(401, logoutService.logout("fakeAuth"));
     }
     @Test
     public void ListGamesPassTest()throws DataAccessException{
-        ClearAll();
+        ClearService clearService = new ClearService();
+        clearService.clear();
         GameModel game = new GameModel();
         game.gameID = 1;
+        game.game = new game();
         gameDao.Insert(game);
         GameModel game2 = new GameModel();
         game2.gameID = 2;
+        game2.game = new game();
         gameDao.Insert(game2);
         AuthToken token = new AuthToken();
         token.authToken = AUTHTOKEN;
         token.username = USER1;
         authDao.Insert(token);
+        HashSet<GameModel> gameList = new HashSet<>();
+        gameList.add(game);
+        gameList.add(game2);
+        //Assertions.assertEquals(gameList, gameDao.FindAll());
+
         ListGamesService listGamesService = new ListGamesService();
-        Assertions.assertEquals(200, listGamesService.listGames(AUTHTOKEN).getStatus());
+        ListGamesResponse response = listGamesService.listGames(AUTHTOKEN);
+        Assertions.assertEquals(200,response.getStatus() );
+        Assertions.assertEquals(gameList.size(),response.games.size());
     }
     @Test
     public void ListGamesFailTest()throws DataAccessException{
-        ClearAll();
+        ClearService clearService = new ClearService();
+        clearService.clear();
         GameModel game = new GameModel();
         game.gameID = 1;
         gameDao.Insert(game);
@@ -171,12 +243,17 @@ public class UnitTests {
         token.authToken = AUTHTOKEN;
         token.username = USER1;
         authDao.Insert(token);
+        HashSet<GameModel> gameList = new HashSet<>();
+        gameList.add(game);
+        gameList.add(game2);
+        Assertions.assertEquals(gameList, gameDao.FindAll());
         ListGamesService listGamesService = new ListGamesService();
         Assertions.assertEquals(401, listGamesService.listGames("notToken").getStatus());
     }
     @Test
     public void JoinGamePassTest()throws DataAccessException {
-        ClearAll();
+        ClearService clearService = new ClearService();
+        clearService.clear();
         GameModel game = new GameModel();
         game.gameID = 1;
         gameDao.Insert(game);
@@ -184,12 +261,18 @@ public class UnitTests {
         token.authToken = AUTHTOKEN;
         token.username = USER1;
         authDao.Insert(token);
+        Assertions.assertEquals(USER1,authDao.Find(AUTHTOKEN));
         JoinGameService joinService = new JoinGameService();
-        Assertions.assertEquals(200, joinService.join(1,AUTHTOKEN,"WHITE"));
+        JoinGameResponse response = joinService.join(1,AUTHTOKEN,"WHITE");
+        Assertions.assertEquals(200, response.status);
+        Assertions.assertEquals(null, response.blackUser);
+        Assertions.assertEquals(USER1, response.whiteUser);
+
     }
     @Test
     public void JoinGameFailTest()throws DataAccessException {
-        ClearAll();
+        ClearService clearService = new ClearService();
+        clearService.clear();
         GameModel game = new GameModel();
         game.gameID = 1;
         gameDao.Insert(game);
@@ -198,6 +281,12 @@ public class UnitTests {
         token.username = USER1;
         authDao.Insert(token);
         JoinGameService joinService = new JoinGameService();
-        Assertions.assertEquals(400, joinService.join(4,AUTHTOKEN,"WHITE"));
+        //Assertions.assertThrows(DataAccessException.class, () -> joinService.join(4,AUTHTOKEN,"WHITE"));
+        JoinGameResponse response = joinService.join(4,AUTHTOKEN,"WHITE");
+        Assertions.assertEquals(400, response.status);
+        response = joinService.join(1,"NotToken","WHITE");
+        Assertions.assertEquals(401, response.status);
+        response = joinService.join(1,"","");
+        Assertions.assertEquals(401, response.status);
     }
 }

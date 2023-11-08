@@ -1,6 +1,7 @@
 package Handlers;
 import Models.GameModel;
 import Requests.JoinGameRequest;
+import Responses.JoinGameResponse;
 import Services.JoinGameService;
 import dataAccess.DataAccessException;
 import spark.*;
@@ -17,12 +18,11 @@ public class JoinGameHandler {
         JoinGameRequest joinRequest = new Gson().fromJson(req.body(), JoinGameRequest.class);
         GameModel game = new GameModel();
         game.setGameID(joinRequest.getGameID());
+        JoinGameResponse joinResponse = service.join(game.gameID, authToken, joinRequest.getPlayerColor());
+        status = joinResponse.status;
         if(game.getGameID() == -1){
             status = 400;
             message = "Error: bad request";
-        }
-        else{
-            status = service.join(game.gameID, authToken, joinRequest.getPlayerColor());
         }
         if(status == 401){
             message = "Error: unauthorized";

@@ -17,6 +17,9 @@ public class JoinGameResponse {
      * string representing a username
      */
     private String username;
+    public int status;
+    public String whiteUser;
+    public String blackUser;
 
     /**
      *creates an instance of a response for joining a game

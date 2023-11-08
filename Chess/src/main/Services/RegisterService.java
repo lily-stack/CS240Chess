@@ -22,6 +22,8 @@ public class RegisterService {
         RegisterResponse registerResponse = new RegisterResponse();
         registerResponse.setStatus(200);
         registerResponse.setUsername(username);
+        registerResponse.setEmail(email);
+        registerResponse.setPassword(password);
         try{
             if (userDao.FindUser(username, password) == 200){
                 registerResponse.setStatus(403);
@@ -36,8 +38,14 @@ public class RegisterService {
         }
         catch(DataAccessException e){
             registerResponse.setStatus(403);
+            return registerResponse;
         }
-        registerResponse.setAuthToken(loginService.login(username, password).authToken);
+        if (loginService.login(username, password) != null) {
+            registerResponse.setAuthToken(loginService.login(username, password).authToken);
+        }
+        else{
+            registerResponse.setAuthToken("");
+        }
         return registerResponse;
     }
 }

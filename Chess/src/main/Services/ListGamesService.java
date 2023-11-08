@@ -17,7 +17,7 @@ public class ListGamesService {
      *
      * @return ListGamesResponse
      */
-    public ListGamesResponse listGames(String authToken) {
+    public ListGamesResponse listGames(String authToken) throws DataAccessException {
         ListGamesResponse listGamesResponse = new ListGamesResponse();
         if(authDao.Find(authToken) == null){
             listGamesResponse.setStatus(401);
@@ -33,7 +33,7 @@ public class ListGamesService {
             return listGamesResponse;
         }
     }
-    public int checkGameList(String authToken){
+    public int checkGameList(String authToken) throws DataAccessException {
         try{
             gameDao.FindAll();
         }

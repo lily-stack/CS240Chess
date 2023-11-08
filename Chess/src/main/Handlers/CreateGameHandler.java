@@ -6,10 +6,12 @@ import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import spark.Request;
 import spark.Response;
+
+import java.sql.SQLException;
 import java.util.Map;
 
 public class CreateGameHandler {
-    public Object handleRequest(Request req, Response res) throws DataAccessException {
+    public Object handleRequest(Request req, Response res) throws DataAccessException, SQLException {
         CreateGameService service = new CreateGameService();
         int status = 200;
         String message = "";

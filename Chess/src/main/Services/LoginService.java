@@ -31,7 +31,9 @@ public class LoginService {
     }
     public AuthToken login(String username, String password) {
         try {
-            userDao.FindUser(username, password);
+            if (userDao.FindUser(username, password) != 200){
+                return null;
+            }
         }
         catch(DataAccessException e){
             return null;

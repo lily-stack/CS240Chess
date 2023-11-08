@@ -19,8 +19,7 @@ public class LoginHandler {
         LoginResponse loginResponse = new LoginResponse();
         AuthToken token = service.login(loginRequest.getUsername(),loginRequest.getPassword());
         status = service.loginTest(loginRequest.getUsername(),loginRequest.getPassword());
-        loginResponse.setUsername(token.username);
-        loginResponse.setAuthToken(token.authToken);
+
         if (status == 401){
             res.status(status);
             message = "Error: unauthorized";
@@ -36,6 +35,8 @@ public class LoginHandler {
             return new Gson().toJson(Map.of("message", message));
         }
         else{
+            loginResponse.setUsername(token.username);
+            loginResponse.setAuthToken(token.authToken);
             res.type("application/json");
             res.body(new Gson().toJson(loginResponse));
             return new Gson().toJson(loginResponse);

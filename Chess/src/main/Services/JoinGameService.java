@@ -24,39 +24,54 @@ public class JoinGameService {
      * @param color of type String
      * @return int
      */
-    public int join(int gameID, String authToken, String color) throws DataAccessException {
+    public JoinGameResponse join(int gameID, String authToken, String color) throws DataAccessException {
         GameModel game;
+        JoinGameResponse response = new JoinGameResponse();
         //check if gameID is in list of games
-        try{
+        try {
             game = gameDao.Find(gameID);
-            if (game == null){
-                return 400;
-            }
+        } catch(DataAccessException e){
+            response.setMessage("Error: bad request");
+            response.status = 400;
+            return response;
         }
-        catch(DataAccessException e){
-            return 400;
+        if (game == null) {
+            response.setMessage("Error: bad request");
+            response.status = 400;
+            return response;
         }
         String username = authDao.Find(authToken);
         //check if user is authorized
         if(username == null){
-            return 401;
+            response.status = 401;
+            return response;
         }
         if(Objects.equals(color, "WHITE")){
             if(game.whiteUsername != null) {
-                return 403;
+                response.setMessage("Error: already taken");
+                response.status = 403;
+                return response;
             }
             else{
-                game.setWhiteUsername(username);
+                //game.setWhiteUsername(username);
+                response.whiteUser = username;
             }
         }
         else if(Objects.equals(color, "BLACK")){
             if(game.blackUsername != null) {
-                return 403;
+                response.setMessage("Error: already taken");
+                response.status = 403;
+                return response;
             }
             else{
-                game.setBlackUsername(username);
+                //game.setBlackUsername(username);
+                response.blackUser = username;
             }
         }
-        return 200;
+        gameDao.claimSpot(color, gameID, username);
+        response.status = 200;
+
+
+        return response;
     }
 }

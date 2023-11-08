@@ -4,11 +4,12 @@ import Models.GameModel;
 import Responses.ListGamesResponse;
 import Services.ListGamesService;
 import com.google.gson.Gson;
+import dataAccess.DataAccessException;
 import spark.Request;
 import spark.Response;
 
 public class ListGameHandler {
-    public Object handleRequest(Request req, Response res) {
+    public Object handleRequest(Request req, Response res) throws DataAccessException {
         ListGamesService service = new ListGamesService();
         int status = 200;
         String message = "";

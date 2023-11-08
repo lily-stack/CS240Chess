@@ -5,6 +5,8 @@ import DataAccess.GameDao;
 import Models.GameModel;
 import dataAccess.DataAccessException;
 
+import java.sql.SQLException;
+
 /**
  * implements the logic for an HTTP POST method for joining a game
  *
@@ -21,11 +23,14 @@ public class CreateGameService {
      * @return CreateGameResponse
      */
     public int create(GameModel game, String authToken) throws DataAccessException {
-        GameDao.game_ID += 66;
-        game.setGameID(GameDao.game_ID);
-            if(authDao.Find(authToken) == null){
-                return 401;
-            }
+        //GameDao.game_ID += 66;
+        //game.setGameID(GameDao.game_ID);
+        /*if(game.gameID == -1){
+            return 400;
+        }*/
+        if(authDao.Find(authToken) == null){
+            return 401;
+        }
         try{
             gameDao.Insert(game);
         }

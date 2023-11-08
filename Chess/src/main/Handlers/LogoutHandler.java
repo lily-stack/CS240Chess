@@ -2,12 +2,13 @@ package Handlers;
 
 import Services.LogoutService;
 import com.google.gson.Gson;
+import dataAccess.DataAccessException;
 import spark.Request;
 import spark.Response;
 import java.util.Map;
 
 public class LogoutHandler {
-    public Object handleRequest(Request req, Response res) {
+    public Object handleRequest(Request req, Response res) throws DataAccessException {
         LogoutService service = new LogoutService();
         int status = 200;
         String message = "";
