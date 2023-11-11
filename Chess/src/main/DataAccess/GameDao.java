@@ -15,7 +15,7 @@ import java.util.*;
  * Data Access Object(Dao) class for storing and retrieving the server's data for the game
  */
 public class GameDao {
-    Database database = new Database();
+    public static Database database = new Database();
     //public static int game_ID = -1;
     /**
      * a map for ordering the game's and being able to easily find and access them
@@ -184,6 +184,9 @@ public class GameDao {
      */
     public void UpdateGame(int gameID, GameModel game) throws DataAccessException{
         System.out.println("get connection from UpdateGame in GameDao");
+        if(Find(gameID) == null){
+            throw new DataAccessException("invalid gameID");
+        }
         Connection connection = database.getConnection();
 
         try (var preparedStatement = connection.prepareStatement("UPDATE gameDao SET gameName=?, whiteUsername=?, blackUsername=?, game=? WHERE gameId=?")) {
@@ -232,7 +235,7 @@ public class GameDao {
     public void clear()throws DataAccessException{
         System.out.println("get connection from clear in GameDoq");
         Connection connection = database.getConnection();
-        try (var preparedStatement = connection.prepareStatement("TRUNCATE gameDao")) {
+        try (var preparedStatement = connection.prepareStatement("DELETE FROM gameDao")) {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);

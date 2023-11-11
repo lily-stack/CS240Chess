@@ -14,7 +14,7 @@ import java.util.*;
  * Data Access Object(Dao) class for storing and retrieving the server's data for authentication
  */
 public class AuthDao {
-    Database database = new Database();
+    public static Database database = new Database();
     /**
      * a map for ordering the authentication tokens and being able to easily find and access them
      */
@@ -48,6 +48,9 @@ public class AuthDao {
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
+            }
+            else{
+                throw new DataAccessException("invalid username");
             }
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
@@ -99,7 +102,9 @@ public class AuthDao {
             }
             database.returnConnection(connection);
         }
-
+        else{
+            throw new DataAccessException("invalid authToken");
+        }
     }
     /**
      * a method for inserting an authToken value

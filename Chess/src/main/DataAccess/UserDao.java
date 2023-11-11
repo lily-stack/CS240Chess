@@ -16,7 +16,7 @@ import java.util.Objects;
  * Data Access Object(Dao) class for storing and retrieving the server's data for the user
  */
 public class UserDao {
-    Database database = new Database();
+    public static Database database = new Database();
     /**
      * a map for ordering all users and being able to easily find and access them
      */
@@ -48,7 +48,7 @@ public class UserDao {
     public void clear() throws DataAccessException {
         System.out.println("get connection from clear in userDao");
         Connection connection = database.getConnection();
-        try (var preparedStatement = connection.prepareStatement("TRUNCATE userDao")) {
+        try (var preparedStatement = connection.prepareStatement("DELETE FROM userDao")) {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             database.returnConnection(connection);
