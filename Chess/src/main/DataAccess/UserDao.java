@@ -1,9 +1,6 @@
 package DataAccess;
 
-import Models.AuthToken;
-import Models.GameModel;
 import Models.User;
-import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import dataAccess.Database;
 

@@ -1,6 +1,5 @@
 package DataAccess;
 
-import Models.AuthToken;
 import Models.GameModel;
 import chess.ChessGame;
 import com.google.gson.Gson;

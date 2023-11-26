@@ -1,12 +1,10 @@
 package DataAccess;
 
 import Models.AuthToken;
-import Models.GameModel;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import dataAccess.Database;
 
-import java.sql.DriverManager;
 import java.sql.*;
 import java.util.*;
 

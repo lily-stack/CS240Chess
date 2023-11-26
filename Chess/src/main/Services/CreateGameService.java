@@ -5,8 +5,6 @@ import DataAccess.GameDao;
 import Models.GameModel;
 import dataAccess.DataAccessException;
 
-import java.sql.SQLException;
-
 /**
  * implements the logic for an HTTP POST method for joining a game
  *

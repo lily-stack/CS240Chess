@@ -2,9 +2,7 @@ package Services;
 
 import DataAccess.AuthDao;
 import DataAccess.GameDao;
-import Models.AuthToken;
 import Models.GameModel;
-import Requests.JoinGameRequest;
 import Responses.JoinGameResponse;
 import dataAccess.DataAccessException;
 

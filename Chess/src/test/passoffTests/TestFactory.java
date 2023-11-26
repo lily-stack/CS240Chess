@@ -19,7 +19,7 @@ public class TestFactory {
     }
 
     public static ChessPiece getNewPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type){
-        ChessPiece piece = new Piece();
+        Piece piece = new Piece();
         piece.SetType(type);
         piece.SetColor(pieceColor);
 		return piece;
@@ -33,7 +33,7 @@ public class TestFactory {
     }
 
     public static ChessMove getNewMove(ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotionPiece){
-        ChessMove move = new Move();
+        Move move = new Move();
         move.setStartPosition(startPosition);
         move.setEndPosition(endPosition);
         move.setPromotion(promotionPiece);

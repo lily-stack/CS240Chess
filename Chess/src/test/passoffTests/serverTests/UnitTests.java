@@ -15,10 +15,7 @@ import chess.game;
 import dataAccess.DataAccessException;
 import org.junit.jupiter.api.*;
 
-import java.sql.SQLException;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 
 public class UnitTests {
     String USER1 = "user1";
