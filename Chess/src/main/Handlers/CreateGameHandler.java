@@ -15,7 +15,7 @@ public class CreateGameHandler {
         CreateGameService service = new CreateGameService();
         int status = 200;
         String message = "";
-        String authToken = req.headers("Authorization");
+        String authToken = req.headers("authorization");
 
         GameModel newGame = new Gson().fromJson(req.body(), GameModel.class);
         if(newGame.getGameName() == null){

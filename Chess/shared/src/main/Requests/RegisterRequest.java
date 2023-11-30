@@ -21,9 +21,9 @@ public class RegisterRequest {
 
     /**
      * creates an instance of a user's request to register
-     * @param user of type User
+     *
      */
-    public RegisterRequest(User user) {}
+    public RegisterRequest() {}
     // … Getters and Setters for username and password properties
 
     public void setUsername(String username) {

@@ -11,7 +11,7 @@ public class RegisterResponse {
     /**
      * string representing a token for authentication
      */
-    public String authToken;
+    public String authorization;
     /**
      * string representing a username
      */
@@ -34,11 +34,11 @@ public class RegisterResponse {
     }
 
     public String getAuthToken() {
-        return authToken;
+        return authorization;
     }
 
     public void setAuthToken(String authToken) {
-        this.authToken = authToken;
+        this.authorization = authToken;
     }
 
     public String getUsername() {

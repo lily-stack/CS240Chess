@@ -122,7 +122,7 @@ public class AuthDao {
         System.out.println("get connection from insert in AuthDao");
         Connection connection = database.getConnection();
         String username = authToken.username;
-        String token = authToken.authToken;
+        String token = authToken.authorization;
         if (username.matches("[a-zA-Z0-9]+") && token.matches("[a-zA-Z0-9]+")) {
             var statement = "INSERT INTO authDao (authToken, username) VALUES(?,?)";
             try (var preparedStatement = connection.prepareStatement(statement)) {

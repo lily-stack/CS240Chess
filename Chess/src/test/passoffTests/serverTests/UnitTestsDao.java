@@ -46,7 +46,7 @@ public class UnitTestsDao {
         ClearService clearService = new ClearService();
         clearService.clear();
         AuthToken token = new AuthToken();
-        token.authToken = AUTHTOKEN;
+        token.authorization = AUTHTOKEN;
         token.username = USER1;
         authDao.Insert(token);
         Assertions.assertEquals(USER1, authDao.Find(AUTHTOKEN));
@@ -58,7 +58,7 @@ public class UnitTestsDao {
         ClearService clearService = new ClearService();
         clearService.clear();
         AuthToken token = new AuthToken();
-        token.authToken = AUTHTOKEN;
+        token.authorization = AUTHTOKEN;
         token.username = USER1;
         authDao.Insert(token);
         Assertions.assertEquals(USER1, authDao.Find(AUTHTOKEN));
@@ -70,7 +70,7 @@ public class UnitTestsDao {
         ClearService clearService = new ClearService();
         clearService.clear();
         AuthToken token = new AuthToken();
-        token.authToken = AUTHTOKEN;
+        token.authorization = AUTHTOKEN;
         token.username = USER1;
         authDao.Insert(token);
         Assertions.assertEquals(USER1, authDao.Find(AUTHTOKEN));
@@ -82,7 +82,7 @@ public class UnitTestsDao {
         ClearService clearService = new ClearService();
         clearService.clear();
         AuthToken token = new AuthToken();
-        token.authToken = AUTHTOKEN;
+        token.authorization = AUTHTOKEN;
         token.username = USER1;
         Assertions.assertDoesNotThrow(() -> authDao.Insert(token));
         Assertions.assertEquals(USER1, authDao.Find(AUTHTOKEN));
@@ -92,7 +92,7 @@ public class UnitTestsDao {
         ClearService clearService = new ClearService();
         clearService.clear();
         AuthToken token = new AuthToken();
-        token.authToken = AUTHTOKEN;
+        token.authorization = AUTHTOKEN;
         token.username = USER1 + "%^&*&";
         Assertions.assertThrows(DataAccessException.class,() -> authDao.Insert(token));
         Assertions.assertNull(authDao.Find(AUTHTOKEN));
@@ -102,7 +102,7 @@ public class UnitTestsDao {
         ClearService clearService = new ClearService();
         clearService.clear();
         AuthToken token = new AuthToken();
-        token.authToken = AUTHTOKEN;
+        token.authorization = AUTHTOKEN;
         token.username = USER1;
         Assertions.assertDoesNotThrow(() -> authDao.Insert(token));
         Assertions.assertEquals(USER1, authDao.Find(AUTHTOKEN));
@@ -112,7 +112,7 @@ public class UnitTestsDao {
         ClearService clearService = new ClearService();
         clearService.clear();
         AuthToken token = new AuthToken();
-        token.authToken = AUTHTOKEN;
+        token.authorization = AUTHTOKEN;
         token.username = USER1;
         Assertions.assertDoesNotThrow(() -> authDao.Insert(token));
         Assertions.assertEquals(null,authDao.Find("notToken"));
@@ -205,10 +205,10 @@ public class UnitTestsDao {
         game.game = chessgame;
         AuthToken authToken = new AuthToken();
         authToken.username = USER1;
-        authToken.authToken = AUTHTOKEN;
+        authToken.authorization = AUTHTOKEN;
         authDao.Insert(authToken);
         Assertions.assertDoesNotThrow(() -> gameDao.Insert(game));
-        Assertions.assertEquals(USER1,authDao.Find(authToken.authToken));
+        Assertions.assertEquals(USER1,authDao.Find(authToken.authorization));
         Assertions.assertEquals(1, (gameDao.Find(game.gameID)).gameID);
     }
     @Test
@@ -223,10 +223,10 @@ public class UnitTestsDao {
         game.game = chessgame;
         AuthToken authToken = new AuthToken();
         authToken.username = USER1;
-        authToken.authToken = AUTHTOKEN;
+        authToken.authorization = AUTHTOKEN;
         authDao.Insert(authToken);
         Assertions.assertThrows(DataAccessException.class,() -> gameDao.Insert(game));
-        Assertions.assertEquals(USER1,authDao.Find(authToken.authToken));
+        Assertions.assertEquals(USER1,authDao.Find(authToken.authorization));
         Assertions.assertThrows(DataAccessException.class,() -> gameDao.Find(game.gameID));
     }
     @Test

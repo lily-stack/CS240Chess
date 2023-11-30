@@ -18,7 +18,7 @@ public class LoginRequest {
     /**
      * creates an instance of a login request for a specific user
      */
-    public LoginRequest(User user) {}
+    public LoginRequest() {}
     // … Getters and Setters for username and password properties
 
     public void setUsername(String username) {

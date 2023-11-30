@@ -1,6 +1,7 @@
 package DataAccess;
 
 import Models.GameModel;
+import deserializer.DeserializeGame;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
@@ -206,7 +207,7 @@ public class GameDao {
     public void claimSpot(String color, int gameId, String username)throws DataAccessException{
         GameModel game = Find(gameId);
         if(color != null){
-            if(Objects.equals(color, "WHITE")){
+            if(Objects.equals(color, "WHITE") || Objects.equals(color, "white")){
                 if(game.whiteUsername != null) {
                     //return 403;
                 }
@@ -214,7 +215,7 @@ public class GameDao {
                     game.setWhiteUsername(username);
                 }
             }
-            else if(Objects.equals(color, "BLACK")){
+            else if(Objects.equals(color, "BLACK") || Objects.equals(color, "black")){
                 if(game.blackUsername != null) {
                    // return 403;
                 }

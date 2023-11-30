@@ -41,7 +41,7 @@ public class RegisterService {
             return registerResponse;
         }
         if (loginService.login(username, password) != null) {
-            registerResponse.setAuthToken(loginService.login(username, password).authToken);
+            registerResponse.setAuthToken(loginService.login(username, password).authorization);
         }
         else{
             registerResponse.setAuthToken("");

@@ -2,26 +2,35 @@ package Client;
 
 import java.util.Arrays;
 
+import Requests.JoinGameRequest;
+import Responses.CreateGameResponse;
+import Responses.RegisterResponse;
+import Server.ServerFacade;
+import chess.ChessGame;
 import com.google.gson.Gson;
-import com.sun.nio.sctp.NotificationHandler;
 import Models.*;
 import exception.ResponseException;
-//import Client.websocket.NotificationHandler;
-import server.ServerFacade;
+import Client.websocket.NotificationHandler;
+
+//import server.ServerFacade;
 import Client.websocket.WebSocketFacade;
 
 
 public class ChessClient {
     private String userName = null;
-    //private final ServerFacade server;
+    private final ServerFacade server;
     private final String serverUrl;
-    private final NotificationHandler notificationHandler;
+    //private final NotificationHandler notificationHandler;
+    private WebSocketFacade ws;
+
     private State state = State.SIGNEDOUT;
 
-    public ChessClient(String serverUrl, NotificationHandler notificationHandler) {
+    public String token;
+
+    public ChessClient(String serverUrl) {
         server = new ServerFacade(serverUrl);
         this.serverUrl = serverUrl;
-        this.notificationHandler = notificationHandler;
+        //this.notificationHandler = notificationHandler;
     }
 
     public String eval(String input) {
@@ -30,7 +39,7 @@ public class ChessClient {
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
-                case "Login" -> logIn(params);
+                case "login" -> logIn(params);
                 case "register" -> register(params);
                 case "list" -> listGames();
                 case "logout" -> logOut();
@@ -45,75 +54,81 @@ public class ChessClient {
         }
     }
 
-    public String logIn(String... params) throws ResponseException {
-        if (params.length >= 1) {
-            state = State.SIGNEDIN;
-            userName = params[0];//String.join("-", params);
-            ws = new WebSocketFacade(serverUrl, notificationHandler);
-            ws.enterPetShop(userName);
-            return String.format("You signed in as %s.", userName);
-        }
-        throw new ResponseException(400, "Expected: <yourname>");
+    private String observe(String ... params) throws ResponseException {
+        assertSignedIn();
+        int gameNumber = Integer.parseInt(params[0]);
+        String color = null;
+        JoinGameRequest request = new JoinGameRequest();
+        request.setPlayerColor(color);
+        request.setGameID(gameNumber);
+        server.joinGame(gameNumber, color);
+        return String.format("observing game %s", gameNumber);
     }
 
-    public String register(String... params) throws ResponseException {
+    private String join(String ... params) throws ResponseException {
         assertSignedIn();
-        if (params.length >= 2) {
-            var name = params[0];
-            var type = PetType.valueOf(params[1].toUpperCase());
-            var friendArray = Arrays.copyOfRange(params, 2, params.length);
-            var friends = new ArrayFriendList(friendArray);
-            var pet = new Pet(0, name, type, friends);
-            pet = server.addPet(pet);
-            return String.format("You rescued %s. Assigned ID: %d", pet.name(), pet.id());
+        String color = params[1];
+        int gameNumber = Integer.parseInt(params[0]);
+        JoinGameRequest request = new JoinGameRequest();
+        request.setPlayerColor(color);
+        request.setGameID(gameNumber);
+        server.joinGame(gameNumber, color);
+        return String.format("joined game %s", gameNumber);
+    }
+
+    public String create(String... params) throws ResponseException {
+        assertSignedIn();
+        if (params.length < 1) {
+            throw new ResponseException(400, "Expected: <gameName>");
         }
-        throw new ResponseException(400, "Expected: <name> <CAT|DOG|FROG> [<friend name>]*");
+        String gameName = params[0];
+        server.createGame(gameName, token);
+        return String.format("Game '%s' created successfully.", gameName);
+
+    }
+
+    private String logOut() throws ResponseException{
+        assertSignedIn();
+        //ws.logOut(userName);
+        //ws = null;
+        server.logoutUser(userName);
+        state = State.SIGNEDOUT;
+        return String.format("%s is signed out", userName);
     }
 
     public String listGames() throws ResponseException {
         assertSignedIn();
-        var pets = server.listPets();
+        var games = server.listGames();
         var result = new StringBuilder();
         var gson = new Gson();
-        for (var pet : pets) {
-            result.append(gson.toJson(pet)).append('\n');
+        for (var game : games) {
+            result.append(gson.toJson(game)).append('\n');
         }
         return result.toString();
     }
 
-
-    public String create(String... params) throws ResponseException {
-        assertSignedIn();
-        var buffer = new StringBuilder();
-        for (var pet : server.listPets()) {
-            buffer.append(String.format("%s says %s%n", pet.name(), pet.sound()));
+    public String register(String... params) throws ResponseException {
+        if (params.length >= 2) {
+            state = State.SIGNEDIN;
+            var username = params[0];
+            var password = params[1];
+            var email = params[2];
+            var user = new User(username, password, email);
+            setToken(server.registerUser(user));
+            return String.format("You registered %s", user.username);
         }
-
-        server.deleteAllPets();
-        return buffer.toString();
+        throw new ResponseException(400, "Expected: <username> <password> <email>");
     }
 
-    public String logOut() throws ResponseException {
-        assertSignedIn();
-        ws.leavePetShop(visitorName);
-        ws = null;
-        state = State.SIGNEDOUT;
-        return String.format("%s left the shop", visitorName);
-    }
-
-    public String join(String... params) throws ResponseException {
-        assertSignedIn();
-        ws.leavePetShop(visitorName);
-        ws = null;
-        state = State.SIGNEDOUT;
-        return String.format("%s left the shop", visitorName);
-    }
-    public String observe(String... params) throws ResponseException {
-        assertSignedIn();
-        ws.leavePetShop(visitorName);
-        ws = null;
-        state = State.SIGNEDOUT;
-        return String.format("%s left the shop", visitorName);
+    public String logIn(String... params) throws ResponseException {
+        if (params.length >= 1) {
+            state = State.SIGNEDIN;
+            userName = params[0];
+            String password = params[1];
+            setToken(server.loginUser(userName, password));
+            return String.format("You signed in as %s.", userName);
+        }
+        throw new ResponseException(400, "Expected: <userName>");
     }
 
     public String help() {
@@ -128,9 +143,9 @@ public class ChessClient {
         return """
                 - create <NAME> - a game
                 - list - games
-                - join <ID> [WHITE|BLACK|<empty>] - a game
+                - join <ID> [WHITE|BLACK|<empty>] <color> - a game
                 - observe <ID> - a game
-                - logOut - when you are done
+                - logout - when you are done
                 - quit - playing chess
                 - help - with possible commands
                 """;
@@ -140,5 +155,12 @@ public class ChessClient {
         if (state == State.SIGNEDOUT) {
             throw new ResponseException(400, "You must sign in");
         }
+    }
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

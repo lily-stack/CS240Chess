@@ -1,4 +1,4 @@
-package DataAccess;
+package deserializer;
 
 import chess.Piece;
 import com.google.gson.*;

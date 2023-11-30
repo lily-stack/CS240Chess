@@ -12,7 +12,7 @@ public class JoinGameResponse {
     /**
      * string that holds the token for authentication
      */
-    private String authToken;
+    private String authorization;
     /**
      * string representing a username
      */
@@ -35,11 +35,11 @@ public class JoinGameResponse {
     }
 
     public String getAuthToken() {
-        return authToken;
+        return authorization;
     }
 
     public void setAuthToken(String authToken) {
-        this.authToken = authToken;
+        this.authorization = authToken;
     }
 
     public String getUsername() {

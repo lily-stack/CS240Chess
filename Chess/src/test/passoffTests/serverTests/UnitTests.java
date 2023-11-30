@@ -72,10 +72,10 @@ public class UnitTests {
         game.game = chessgame;
         AuthToken authToken = new AuthToken();
         authToken.username = USER1;
-        authToken.authToken = AUTHTOKEN;
+        authToken.authorization = AUTHTOKEN;
         authDao.Insert(authToken);
         Assertions.assertEquals(200, gameservice.create(game, AUTHTOKEN));
-        Assertions.assertEquals(USER1,authDao.Find(authToken.authToken));
+        Assertions.assertEquals(USER1,authDao.Find(authToken.authorization));
         Assertions.assertEquals(1, (gameDao.Find(game.gameID)).gameID);
     }
     @Test
@@ -87,9 +87,9 @@ public class UnitTests {
         game.gameID = 1;
         AuthToken authToken = new AuthToken();
         authToken.username = USER1;
-        authToken.authToken = AUTHTOKEN;
+        authToken.authorization = AUTHTOKEN;
         authDao.Insert(authToken);
-        Assertions.assertEquals(USER1,authDao.Find(authToken.authToken));
+        Assertions.assertEquals(USER1,authDao.Find(authToken.authorization));
         Assertions.assertEquals(401, gameservice.create(game, "notToken"));
         GameModel newGame = new GameModel();
         //Assertions.assertEquals(400, gameservice.create(newGame, AUTHTOKEN));
@@ -100,7 +100,7 @@ public class UnitTests {
         clearService.clear();
         RegisterService registerService = new RegisterService();
         RegisterResponse response = registerService.register(USER1, PASSWORD1, EMAIL1);
-        Assertions.assertNotNull(response.authToken);
+        Assertions.assertNotNull(response.authorization);
         Assertions.assertEquals(200, response.status);
         Assertions.assertEquals(EMAIL1,response.getEmail());
         Assertions.assertEquals(USER1,response.getUsername());
@@ -167,7 +167,7 @@ public class UnitTests {
         user.password = PASSWORD1;
         AuthToken authToken = new AuthToken();
         authToken.username = USER1;
-        authToken.authToken = AUTHTOKEN;
+        authToken.authorization = AUTHTOKEN;
         authDao.Insert(authToken);
         RegisterService registerService = new RegisterService();
         RegisterResponse response = registerService.register(USER1, PASSWORD1, EMAIL1);
@@ -195,8 +195,8 @@ public class UnitTests {
         Assertions.assertEquals(EMAIL1,response.getEmail());
         Assertions.assertEquals(PASSWORD1,response.getPassword());
         Assertions.assertEquals(USER1, response.getUsername());
-        Assertions.assertNotNull(response.authToken);
-        Assertions.assertEquals(USER1,authDao.Find(response.authToken));
+        Assertions.assertNotNull(response.authorization);
+        Assertions.assertEquals(USER1,authDao.Find(response.authorization));
         LogoutService logoutService = new LogoutService();
         Assertions.assertEquals(401, logoutService.logout("fakeAuth"));
     }
@@ -213,7 +213,7 @@ public class UnitTests {
         game2.game = new game();
         gameDao.Insert(game2);
         AuthToken token = new AuthToken();
-        token.authToken = AUTHTOKEN;
+        token.authorization = AUTHTOKEN;
         token.username = USER1;
         authDao.Insert(token);
         HashSet<GameModel> gameList = new HashSet<>();
@@ -237,7 +237,7 @@ public class UnitTests {
         game2.gameID = 2;
         gameDao.Insert(game2);
         AuthToken token = new AuthToken();
-        token.authToken = AUTHTOKEN;
+        token.authorization = AUTHTOKEN;
         token.username = USER1;
         authDao.Insert(token);
         HashSet<GameModel> gameList = new HashSet<>();
@@ -255,7 +255,7 @@ public class UnitTests {
         game.gameID = 1;
         gameDao.Insert(game);
         AuthToken token = new AuthToken();
-        token.authToken = AUTHTOKEN;
+        token.authorization = AUTHTOKEN;
         token.username = USER1;
         authDao.Insert(token);
         Assertions.assertEquals(USER1,authDao.Find(AUTHTOKEN));
@@ -274,7 +274,7 @@ public class UnitTests {
         game.gameID = 1;
         gameDao.Insert(game);
         AuthToken token = new AuthToken();
-        token.authToken = AUTHTOKEN;
+        token.authorization = AUTHTOKEN;
         token.username = USER1;
         authDao.Insert(token);
         JoinGameService joinService = new JoinGameService();

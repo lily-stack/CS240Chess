@@ -36,7 +36,7 @@ public class LoginHandler {
         }
         else{
             loginResponse.setUsername(token.username);
-            loginResponse.setAuthToken(token.authToken);
+            loginResponse.setAuthToken(token.authorization);
             res.type("application/json");
             res.body(new Gson().toJson(loginResponse));
             return new Gson().toJson(loginResponse);

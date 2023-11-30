@@ -7,18 +7,18 @@ public class AuthToken {
     /**
      * string of token for authorization
      */
-    public String authToken;
+    public String authorization;
     /**
      * string to represent the username
      */
     public String username;
 
     public void setAuthToken(String authToken) {
-        this.authToken = authToken;
+        this.authorization = authToken;
     }
 
     public String getAuthToken() {
-        return authToken;
+        return authorization;
     }
 
     public void setUsername(String username) {

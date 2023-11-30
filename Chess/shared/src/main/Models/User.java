@@ -16,4 +16,12 @@ public class User {
      * string representing a user's email
      */
     public String email;
+
+    public User(String name, String ps, String e) {
+        username = name;
+        password = ps;
+        email = e;
+    }
+    public User() {
+    }
 }
