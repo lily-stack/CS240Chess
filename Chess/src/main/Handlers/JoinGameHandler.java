@@ -38,7 +38,10 @@ public class JoinGameHandler {
         }
         res.type("application/json");
         res.status(status);
-        res.body(new Gson().toJson(Map.of("message",message)));
-        return new Gson().toJson(Map.of("message", message));
+        //res.body(new Gson().toJson(Map.of("message",message)));
+       // return new Gson().toJson(Map.of("message", message));
+
+        res.body(new Gson().toJson(joinResponse));
+        return new Gson().toJson(joinResponse);
     }
 }

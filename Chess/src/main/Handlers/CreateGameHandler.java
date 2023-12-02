@@ -1,6 +1,9 @@
 package Handlers;
 
 import Models.GameModel;
+import Requests.CreateGameRequest;
+import Responses.CreateGameResponse;
+import Responses.LoginResponse;
 import Services.CreateGameService;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
@@ -16,6 +19,7 @@ public class CreateGameHandler {
         int status = 200;
         String message = "";
         String authToken = req.headers("authorization");
+        CreateGameResponse response = new CreateGameResponse();
 
         GameModel newGame = new Gson().fromJson(req.body(), GameModel.class);
         if(newGame.getGameName() == null){
@@ -34,8 +38,11 @@ public class CreateGameHandler {
         if(status == 200){
             res.type("application/json");
             res.status(status);
-            res.body(new Gson().toJson(Map.of("gameID",newGame.gameID)));
-            return new Gson().toJson(Map.of("gameID", newGame.gameID));
+            response.setGameId(newGame.gameID);
+            //res.body(new Gson().toJson(Map.of("gameID",newGame.gameID)));
+            res.body(new Gson().toJson(response));
+            //return new Gson().toJson(Map.of("gameID", newGame.gameID));
+            return new Gson().toJson(response);
         }
         res.type("application/json");
         res.status(status);

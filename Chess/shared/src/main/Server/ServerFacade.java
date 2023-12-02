@@ -2,10 +2,7 @@ package Server;
 
 import Models.GameModel;
 import Requests.*;
-import Responses.CreateGameResponse;
-import Responses.JoinGameResponse;
-import Responses.LoginResponse;
-import Responses.RegisterResponse;
+import Responses.*;
 import com.google.gson.Gson;
 import exception.ResponseException;
 import deserializer.DeserializeGame;
@@ -13,6 +10,7 @@ import Models.User;
 
 import java.io.*;
 import java.net.*;
+import java.util.Collection;
 import java.util.Objects;
 
 public class ServerFacade {
@@ -27,12 +25,13 @@ public class ServerFacade {
         this.makeRequest("DELETE", path, null, null);
     }
 
-    public void createGame(String gameName, String authToken) throws ResponseException {
+    public int createGame(String gameName, String authToken) throws ResponseException {
         var path = "/game";
         CreateGameRequest request = new CreateGameRequest();
         request.setAuthToken(authToken);
         request.setGameName(gameName);
-        this.makeRequest("POST", path, request, CreateGameResponse.class);
+        CreateGameResponse response = this.makeRequest("POST", path, request, CreateGameResponse.class);
+        return response.getGameId();
     }
     public String registerUser(User user) throws ResponseException {
         //clear();//get rid of
@@ -53,10 +52,12 @@ public class ServerFacade {
         return response.getAuthToken();
     }
 
-    public void logoutUser(String username) throws ResponseException {
-        //var path = "/session";
-        var path = String.format("/session/%s", username);
-        this.makeRequest("DELETE", path, null, null);
+    public void logoutUser(String token) throws ResponseException {
+        var path = "/session";
+        //var path = String.format("/session/%s", username);
+        LogoutRequest request = new LogoutRequest();
+        request.setAuthorization(token);
+        this.makeRequest("DELETE", path, request, null);
     }
 
     /*public void deleteAllUsers() throws ResponseException {
@@ -64,22 +65,33 @@ public class ServerFacade {
         this.makeRequest("DELETE", path, null, null);
     }*/
 
-    public GameModel[] listGames() throws ResponseException {
+    public Collection<GameModel> listGames(String token) throws ResponseException {
         var path = "/game";
         //maybe get rid of
-        record listGameResponse(GameModel[] game) { }
-        var response = this.makeRequest("GET", path, null, listGameResponse.class);
-        return response.game();
+        ListGameRequest request = new ListGameRequest();
+        request.setAuthToken(token);
+        //record listGameResponse(GameModel[] game) { }
+        var response = this.makeRequest("GET", path, request, ListGamesResponse.class);
+        return response.games;
     }
-    public void joinGame(int gameNumber, String color) throws ResponseException {
-        var path = "/game";
-        JoinGameRequest request = new JoinGameRequest();
-        request.setPlayerColor(color);
-        request.setGameID(gameNumber);
-        this.makeRequest("PUT", path, request, JoinGameResponse.class);
+    public void joinGame(int gameNumber, String color, String token) throws ResponseException {
+        if(color != null) {
+            color = color.toUpperCase();
+        }
+        if(color == null || color.equals("BLACK") || color.equals("WHITE")) {
+            var path = "/game";
+            JoinGameRequest request = new JoinGameRequest();
+            request.setPlayerColor(color);
+            request.setGameID(gameNumber);
+            request.setAuthorization(token);
+            this.makeRequest("PUT", path, request, JoinGameResponse.class);
+        }
+        else{
+            throw new ResponseException(500,"incorrect color");
+        }
     }
-    public void observeGame(int gameNumber) throws ResponseException {
-        joinGame(gameNumber, null);
+    public void observeGame(int gameNumber, String token) throws ResponseException {
+        joinGame(gameNumber, null, token);
     }
 
     public <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws ResponseException {

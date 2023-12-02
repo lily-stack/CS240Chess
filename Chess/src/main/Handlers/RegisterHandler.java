@@ -42,8 +42,9 @@ public class RegisterHandler {
         }
         else{
             res.type("application/json");
-            res.body(new Gson().toJson(Map.of("username",registerResponse.getUsername(),"authToken", registerResponse.getAuthToken())));
-            return new Gson().toJson(Map.of("username",registerResponse.getUsername(),"authToken", registerResponse.getAuthToken()));
+            //res.body(new Gson().toJson(Map.of("username",registerResponse.getUsername(),"authToken", registerResponse.getAuthToken())));
+            res.body(new Gson().toJson(registerResponse));
+            return new Gson().toJson(registerResponse);
         }
     }
 }

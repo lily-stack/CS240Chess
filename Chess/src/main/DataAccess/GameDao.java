@@ -208,20 +208,10 @@ public class GameDao {
         GameModel game = Find(gameId);
         if(color != null){
             if(Objects.equals(color, "WHITE") || Objects.equals(color, "white")){
-                if(game.whiteUsername != null) {
-                    //return 403;
-                }
-                else{
-                    game.setWhiteUsername(username);
-                }
+                game.setWhiteUsername(username);
             }
             else if(Objects.equals(color, "BLACK") || Objects.equals(color, "black")){
-                if(game.blackUsername != null) {
-                   // return 403;
-                }
-                else{
-                    game.setBlackUsername(username);
-                }
+                game.setBlackUsername(username);
             }
         }
         UpdateGame(gameId, game);

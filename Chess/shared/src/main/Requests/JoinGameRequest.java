@@ -12,6 +12,7 @@ public class JoinGameRequest {
      * int representing the ID of a game
      */
     private int gameID;
+    public String authorization;
 
     /**
      * constructor for creating an instance of a request to join a game
@@ -32,5 +33,12 @@ public class JoinGameRequest {
 
     public void setPlayerColor(String playerColor) {
         this.playerColor = playerColor;
+    }
+
+    public String getAuthorization() {
+        return authorization;
+    }
+    public void setAuthorization(String authorization) {
+        this.authorization = authorization;
     }
 }

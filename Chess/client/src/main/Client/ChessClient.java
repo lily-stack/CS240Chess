@@ -1,6 +1,8 @@
 package Client;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import Requests.JoinGameRequest;
 import Responses.CreateGameResponse;
@@ -14,6 +16,7 @@ import Client.websocket.NotificationHandler;
 
 //import server.ServerFacade;
 import Client.websocket.WebSocketFacade;
+import ui.Chess;
 
 
 public class ChessClient {
@@ -26,6 +29,8 @@ public class ChessClient {
     private State state = State.SIGNEDOUT;
 
     public String token;
+    List<Integer> gameList = new ArrayList<>();
+
 
     public ChessClient(String serverUrl) {
         server = new ServerFacade(serverUrl);
@@ -56,24 +61,26 @@ public class ChessClient {
 
     private String observe(String ... params) throws ResponseException {
         assertSignedIn();
-        int gameNumber = Integer.parseInt(params[0]);
-        String color = null;
+        int gameNumber = Integer.parseInt(params[0]) - 1;
+        int gameID = gameList.get(gameNumber);
         JoinGameRequest request = new JoinGameRequest();
-        request.setPlayerColor(color);
-        request.setGameID(gameNumber);
-        server.joinGame(gameNumber, color);
-        return String.format("observing game %s", gameNumber);
+        request.setGameID(gameID);
+        server.joinGame(gameID, null, token);
+        //Chess.main();
+        return String.format("observing game %s", gameNumber + 1);
     }
 
     private String join(String ... params) throws ResponseException {
         assertSignedIn();
         String color = params[1];
-        int gameNumber = Integer.parseInt(params[0]);
+        int gameNumber = Integer.parseInt(params[0]) - 1;
+        int gameID = gameList.get(gameNumber);
         JoinGameRequest request = new JoinGameRequest();
         request.setPlayerColor(color);
-        request.setGameID(gameNumber);
-        server.joinGame(gameNumber, color);
-        return String.format("joined game %s", gameNumber);
+        request.setGameID(gameID);
+        server.joinGame(gameID, color, token);
+        //Chess.main();
+        return String.format("joined game %s", gameNumber + 1);
     }
 
     public String create(String... params) throws ResponseException {
@@ -83,6 +90,7 @@ public class ChessClient {
         }
         String gameName = params[0];
         server.createGame(gameName, token);
+
         return String.format("Game '%s' created successfully.", gameName);
 
     }
@@ -91,18 +99,25 @@ public class ChessClient {
         assertSignedIn();
         //ws.logOut(userName);
         //ws = null;
-        server.logoutUser(userName);
+        server.logoutUser(token);
         state = State.SIGNEDOUT;
         return String.format("%s is signed out", userName);
     }
 
     public String listGames() throws ResponseException {
         assertSignedIn();
-        var games = server.listGames();
+        gameList.clear();
+        var games = server.listGames(token);
         var result = new StringBuilder();
-        var gson = new Gson();
+        int itr = 1;
         for (var game : games) {
-            result.append(gson.toJson(game)).append('\n');
+            result.append(itr).append("---")
+                    .append("GameName: ").append(game.gameName).append(", ")
+                    .append("WhitePlayer: ").append(game.whiteUsername).append(", ")
+                    .append("BlackPlayer: ").append(game.blackUsername)
+                    .append('\n');
+            itr++;
+            gameList.add(game.gameID);
         }
         return result.toString();
     }
@@ -110,10 +125,10 @@ public class ChessClient {
     public String register(String... params) throws ResponseException {
         if (params.length >= 2) {
             state = State.SIGNEDIN;
-            var username = params[0];
+            userName = params[0];
             var password = params[1];
             var email = params[2];
-            var user = new User(username, password, email);
+            var user = new User(userName, password, email);
             setToken(server.registerUser(user));
             return String.format("You registered %s", user.username);
         }
